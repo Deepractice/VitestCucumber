@@ -1,13 +1,12 @@
 /**
  * @deepracticex/vitest-cucumber
  *
- * Vitest plugin for running Cucumber feature files
+ * Runtime API for Cucumber BDD step definitions and hooks
  */
 
-// Export public API
+// Export public API for step definitions
 export { Given, When, Then, And, But } from '~/api';
 export { Before, After, BeforeAll, AfterAll } from '~/api';
-export { vitestCucumber } from '~/api';
 export { setWorldConstructor } from '~/api';
 
 // Export DataTable class (not just type)
@@ -15,7 +14,6 @@ export { DataTable } from '~/types';
 
 // Export public types
 export type {
-  VitestCucumberPluginOptions,
   StepType,
   StepFunction,
   StepDefinition,
