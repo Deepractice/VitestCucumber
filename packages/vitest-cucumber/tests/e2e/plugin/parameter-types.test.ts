@@ -230,6 +230,11 @@ describe('Parameter Types', () => {
         path.join(STEPS_DIR, 'parameter-types.steps.ts'),
       );
 
+      if (!result.success) {
+        console.log('Output:', result.output);
+        console.log('Error:', result.error);
+      }
+
       expect(result.success).toBe(true);
     });
 
