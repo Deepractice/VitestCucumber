@@ -1,5 +1,8 @@
 # EnhancedVitest
 
+[![@deepracticex/vitest-cucumber](https://img.shields.io/npm/v/@deepracticex/vitest-cucumber?label=vitest-cucumber)](https://www.npmjs.com/package/@deepracticex/vitest-cucumber)
+[![@deepracticex/vitest-cucumber-plugin](https://img.shields.io/npm/v/@deepracticex/vitest-cucumber-plugin?label=vitest-cucumber-plugin)](https://www.npmjs.com/package/@deepracticex/vitest-cucumber-plugin)
+
 **The official Vitest enhancement suite for Deepractice projects.**
 
 This monorepo contains all Vitest enhancements and extensions developed by Deepractice. As we continue to build and refine our testing infrastructure, all Vitest-related improvements will be developed and maintained here.
