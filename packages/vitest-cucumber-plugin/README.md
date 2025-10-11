@@ -79,6 +79,78 @@ The plugin transforms `.feature` files at build time:
 
 Each scenario becomes a `it()` test, and steps are executed through the runtime API.
 
+## Creating Wrapper Packages
+
+### Problem: Dependency Transmission
+
+When creating wrapper packages, you want users to only install your package without directly depending on `@deepracticex/vitest-cucumber`. However, the plugin generates code that imports runtime APIs, and pnpm's strict dependency isolation prevents access to transitive dependencies.
+
+### Solution: Custom Runtime Module
+
+Use the `runtimeModule` option to generate imports from your wrapper package instead:
+
+**Step 1: Configure the plugin**
+
+```typescript
+// @myorg/config-preset/vitest.config.ts
+import { defineConfig } from 'vitest/config';
+import { vitestCucumber } from '@deepracticex/vitest-cucumber-plugin';
+
+export const vitest = {
+  base: defineConfig({
+    plugins: [
+      vitestCucumber({
+        runtimeModule: '@myorg/testing-utils', // Point to your wrapper
+      }),
+    ],
+    test: {
+      include: ['**/*.feature'],
+    },
+  }),
+};
+```
+
+**Step 2: Re-export runtime in your wrapper**
+
+```typescript
+// @myorg/testing-utils/src/index.ts
+// Re-export runtime APIs
+export {
+  StepExecutor,
+  ContextManager,
+  DataTable,
+  HookRegistry,
+} from '@deepracticex/vitest-cucumber/runtime';
+
+// Re-export step definition APIs
+export {
+  Given,
+  When,
+  Then,
+  Before,
+  After,
+} from '@deepracticex/vitest-cucumber';
+```
+
+**Step 3: User's simple dependency**
+
+```json
+{
+  "devDependencies": {
+    "@myorg/testing-utils": "^1.0.0"
+  }
+}
+```
+
+Now the generated code imports from `@myorg/testing-utils/runtime`, which users have access to through their direct dependency!
+
+### Benefits
+
+- ✅ **Single dependency** - Users only install your wrapper package
+- ✅ **Version control** - You control which runtime version to use
+- ✅ **Natural transmission** - Dependencies flow through the dependency chain
+- ✅ **Backward compatible** - Direct users can still use the default runtime
+
 ## Requirements
 
 - Node.js >= 18

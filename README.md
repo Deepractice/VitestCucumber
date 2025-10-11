@@ -39,6 +39,21 @@ Vitest plugin for transforming Cucumber feature files to test code.
 **Status**: ✅ Stable
 **Use Cases**: Feature file transformation, Vitest integration
 
+## For Wrapper Package Authors
+
+If you're building a wrapper package around vitest-cucumber, you can use the `runtimeModule` option to eliminate the need for users to directly depend on `@deepracticex/vitest-cucumber`.
+
+**Quick example:**
+
+```typescript
+// Your wrapper's vitest config
+vitestCucumber({
+  runtimeModule: '@your-org/testing-utils',
+});
+```
+
+Then re-export the runtime APIs in your package, and users only need to install your wrapper! See the [vitest-cucumber-plugin README](./packages/vitest-cucumber-plugin#creating-wrapper-packages) for a complete guide.
+
 ## Roadmap
 
 Future enhancements under consideration:
