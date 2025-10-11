@@ -1,0 +1,21 @@
+{
+  "name": "enhanced-vitest",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Enhanced Vitest with Cucumber BDD support",
+  "scripts": {
+    "build": "pnpm -r --filter './packages/*' build",
+    "clean": "pnpm -r --filter './packages/*' clean",
+    "test": "pnpm -r --filter './packages/*' test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Deepractice/EnhancedVitest.git"
+  },
+  "author": "Deepractice",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
