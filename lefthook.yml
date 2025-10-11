@@ -1,9 +1,15 @@
 pre-commit:
-  parallel: true
+  parallel: false
   commands:
     format:
       glob: '*.{js,ts,json,yml,yaml,md}'
       run: pnpm exec prettier --write {staged_files} && git add {staged_files}
+    typecheck:
+      run: pnpm typecheck
+    build:
+      run: pnpm build
+    # test:
+    #   run: pnpm test
 
 commit-msg:
   commands:
@@ -12,7 +18,5 @@ commit-msg:
 
 pre-push:
   commands:
-    build:
-      run: pnpm build
-    # test:
-    #   run: pnpm test
+    final-check:
+      run: echo "✅ All checks passed in pre-commit"
