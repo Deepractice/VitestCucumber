@@ -1,7 +1,6 @@
 import { FeatureParser } from '~/core/parser';
 import { CodeGenerator } from './CodeGenerator';
 import { globSync } from 'glob';
-import { resolve, dirname } from 'node:path';
 
 /**
  * Main transformation orchestrator
@@ -20,13 +19,12 @@ export class FeatureTransformer {
   /**
    * Transform feature file content to test code
    */
-  public transform(content: string, featureFilePath: string): string {
+  public transform(content: string, _featureFilePath: string): string {
     // Parse feature file
     const feature = this.parser.parse(content);
 
-    // Find step definition files relative to the feature file
-    const featureDir = dirname(featureFilePath);
-    const stepFiles = this.discoverStepFiles(featureDir);
+    // Find step definition files
+    const stepFiles = this.discoverStepFiles();
 
     // Generate test code with step imports
     const code = this.generator.generate(feature, stepFiles);
@@ -37,7 +35,7 @@ export class FeatureTransformer {
   /**
    * Discover step definition files
    */
-  private discoverStepFiles(featureDir: string): string[] {
+  private discoverStepFiles(): string[] {
     // Try multiple possible step locations
     const patterns = [
       `${this.stepsDir}/**/*.steps.ts`,
