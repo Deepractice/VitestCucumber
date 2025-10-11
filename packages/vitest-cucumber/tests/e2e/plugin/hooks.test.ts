@@ -2,28 +2,28 @@
  * E2E tests for Hooks system
  * Tests scenarios from features/plugin-step-definitions.feature lines 190-246
  */
-import { describe, it, expect } from "vitest";
-import { runCucumberFeature } from "../../../src/core/runner";
-import path from "path";
-import { fileURLToPath } from "url";
+import { describe, it, expect } from 'vitest';
+import { runCucumberFeature } from '../../../src/core/runner';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const FIXTURES_DIR = path.resolve(__dirname, "../fixtures");
-const STEPS_DIR = path.join(FIXTURES_DIR, "steps");
+const FIXTURES_DIR = path.resolve(__dirname, '../fixtures');
+const STEPS_DIR = path.join(FIXTURES_DIR, 'steps');
 
-describe("Hooks System", () => {
-  describe("Before hook", () => {
-    it("should execute Before hook before each scenario", () => {
+describe('Hooks System', () => {
+  describe('Before hook', () => {
+    it('should execute Before hook before each scenario', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-before.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-before.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       if (!result.success) {
-        console.log("Output:", result.output);
-        console.log("Error:", result.error);
+        console.log('Output:', result.output);
+        console.log('Error:', result.error);
       }
 
       expect(result.success).toBe(true);
@@ -38,10 +38,10 @@ describe("Hooks System", () => {
       }
     });
 
-    it("should provide context to Before hook", () => {
+    it('should provide context to Before hook', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-before-context.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-before-context.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -55,10 +55,10 @@ describe("Hooks System", () => {
       }
     });
 
-    it("should run Before hook for each scenario independently", () => {
+    it('should run Before hook for each scenario independently', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-before-isolation.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-before-isolation.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -74,16 +74,16 @@ describe("Hooks System", () => {
     });
   });
 
-  describe("After hook", () => {
-    it("should execute After hook after each scenario", () => {
+  describe('After hook', () => {
+    it('should execute After hook after each scenario', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-after.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-after.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       if (!result.success) {
-        console.log("Output:", result.output);
-        console.log("Error:", result.error);
+        console.log('Output:', result.output);
+        console.log('Error:', result.error);
       }
 
       expect(result.success).toBe(true);
@@ -97,10 +97,10 @@ describe("Hooks System", () => {
       }
     });
 
-    it("should execute After hook even when scenario fails", () => {
+    it('should execute After hook even when scenario fails', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-after-on-failure.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-after-on-failure.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       // Scenario should fail, but After hook should still run
@@ -109,26 +109,26 @@ describe("Hooks System", () => {
       expect(result.output).toBeTruthy();
     });
 
-    it("should have access to scenario status in After hook", () => {
+    it('should have access to scenario status in After hook', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-after-status.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-after-status.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       expect(result.success).toBe(true);
     });
   });
 
-  describe("BeforeAll hook", () => {
-    it("should execute BeforeAll hook once before all scenarios", () => {
+  describe('BeforeAll hook', () => {
+    it('should execute BeforeAll hook once before all scenarios', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-before-all.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-before-all.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       if (!result.success) {
-        console.log("Output:", result.output);
-        console.log("Error:", result.error);
+        console.log('Output:', result.output);
+        console.log('Error:', result.error);
       }
 
       expect(result.success).toBe(true);
@@ -143,10 +143,10 @@ describe("Hooks System", () => {
       }
     });
 
-    it("should support async BeforeAll hook", () => {
+    it('should support async BeforeAll hook', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-before-all-async.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-before-all-async.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -161,16 +161,16 @@ describe("Hooks System", () => {
     });
   });
 
-  describe("AfterAll hook", () => {
-    it("should execute AfterAll hook once after all scenarios", () => {
+  describe('AfterAll hook', () => {
+    it('should execute AfterAll hook once after all scenarios', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-after-all.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-after-all.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       if (!result.success) {
-        console.log("Output:", result.output);
-        console.log("Error:", result.error);
+        console.log('Output:', result.output);
+        console.log('Error:', result.error);
       }
 
       expect(result.success).toBe(true);
@@ -185,10 +185,10 @@ describe("Hooks System", () => {
       }
     });
 
-    it("should support async AfterAll hook", () => {
+    it('should support async AfterAll hook', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-after-all-async.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-after-all-async.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -203,16 +203,16 @@ describe("Hooks System", () => {
     });
   });
 
-  describe("Hook execution order", () => {
-    it("should execute hooks in correct order: BeforeAll > Before > After > AfterAll", () => {
+  describe('Hook execution order', () => {
+    it('should execute hooks in correct order: BeforeAll > Before > After > AfterAll', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-execution-order.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-execution-order.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       if (!result.success) {
-        console.log("Output:", result.output);
-        console.log("Error:", result.error);
+        console.log('Output:', result.output);
+        console.log('Error:', result.error);
       }
 
       expect(result.success).toBe(true);
@@ -226,30 +226,30 @@ describe("Hooks System", () => {
       }
     });
 
-    it("should execute multiple Before hooks in registration order", () => {
+    it('should execute multiple Before hooks in registration order', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-multiple-before.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-multiple-before.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       expect(result.success).toBe(true);
     });
 
-    it("should execute multiple After hooks in registration order", () => {
+    it('should execute multiple After hooks in registration order', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-multiple-after.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-multiple-after.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       expect(result.success).toBe(true);
     });
   });
 
-  describe("Hook context sharing", () => {
-    it("should share context between Before hook and steps", () => {
+  describe('Hook context sharing', () => {
+    it('should share context between Before hook and steps', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-context-sharing.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-context-sharing.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -263,10 +263,10 @@ describe("Hooks System", () => {
       }
     });
 
-    it("should share context between steps and After hook", () => {
+    it('should share context between steps and After hook', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-context-after.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-context-after.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -280,10 +280,10 @@ describe("Hooks System", () => {
       }
     });
 
-    it("should isolate context between scenarios", () => {
+    it('should isolate context between scenarios', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-context-isolation.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-context-isolation.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -299,11 +299,11 @@ describe("Hooks System", () => {
     });
   });
 
-  describe("Async hook handling", () => {
-    it("should wait for async Before hook to complete", () => {
+  describe('Async hook handling', () => {
+    it('should wait for async Before hook to complete', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-async-before.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-async-before.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -317,10 +317,10 @@ describe("Hooks System", () => {
       }
     });
 
-    it("should wait for async After hook to complete", () => {
+    it('should wait for async After hook to complete', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-async-after.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-async-after.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -334,10 +334,10 @@ describe("Hooks System", () => {
       }
     });
 
-    it("should handle Promise rejection in hooks", () => {
+    it('should handle Promise rejection in hooks', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "hooks-async-error.feature"),
-        path.join(STEPS_DIR, "hooks.steps.ts"),
+        path.join(FIXTURES_DIR, 'hooks-async-error.feature'),
+        path.join(STEPS_DIR, 'hooks.steps.ts'),
       );
 
       // Hook error should cause test to fail

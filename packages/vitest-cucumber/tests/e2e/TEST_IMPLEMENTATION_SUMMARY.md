@@ -184,15 +184,15 @@ Created comprehensive E2E tests for missing Cucumber features in vitest-cucumber
 All tests follow the same reliable pattern:
 
 ```typescript
-it("should [behavior description]", () => {
+it('should [behavior description]', () => {
   const result = runCucumberFeature(
-    path.join(FIXTURES_DIR, "feature-name.feature"),
-    path.join(STEPS_DIR, "steps-name.steps.ts"),
+    path.join(FIXTURES_DIR, 'feature-name.feature'),
+    path.join(STEPS_DIR, 'steps-name.steps.ts'),
   );
 
   if (!result.success) {
-    console.log("Output:", result.output);
-    console.log("Error:", result.error);
+    console.log('Output:', result.output);
+    console.log('Error:', result.error);
   }
 
   expect(result.success).toBe(true);

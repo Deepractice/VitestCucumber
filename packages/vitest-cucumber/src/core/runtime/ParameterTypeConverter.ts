@@ -2,10 +2,10 @@
  * Parameter types supported by Cucumber expressions
  */
 export enum ParameterType {
-  INT = "int",
-  FLOAT = "float",
-  STRING = "string",
-  WORD = "word",
+  INT = 'int',
+  FLOAT = 'float',
+  STRING = 'string',
+  WORD = 'word',
 }
 
 /**
@@ -35,7 +35,7 @@ export class ParameterTypeConverter {
   ): ParameterInfo[] {
     const parameterInfos: ParameterInfo[] = [];
 
-    if (typeof pattern === "string") {
+    if (typeof pattern === 'string') {
       // Parse Cucumber expressions like "I have {int} cucumbers"
       let match: RegExpExecArray | null;
       let index = 0;
@@ -92,12 +92,12 @@ export class ParameterTypeConverter {
 
     // Unescape common escape sequences
     result = result
-      .replace(/\\n/g, "\n")
-      .replace(/\\r/g, "\r")
-      .replace(/\\t/g, "\t")
+      .replace(/\\n/g, '\n')
+      .replace(/\\r/g, '\r')
+      .replace(/\\t/g, '\t')
       .replace(/\\"/g, '"')
       .replace(/\\'/g, "'")
-      .replace(/\\\\/g, "\\");
+      .replace(/\\\\/g, '\\');
 
     return result;
   }
@@ -110,13 +110,13 @@ export class ParameterTypeConverter {
     let pattern = expression;
 
     // Escape special regex characters except {}
-    pattern = pattern.replace(/[.*+?^$()[\]\\|]/g, "\\$&");
+    pattern = pattern.replace(/[.*+?^$()[\]\\|]/g, '\\$&');
 
     // Replace Cucumber expressions with appropriate regex patterns
-    pattern = pattern.replace(/\{int\}/g, "(-?\\d+)");
-    pattern = pattern.replace(/\{float\}/g, "(-?\\d+\\.?\\d*)");
-    pattern = pattern.replace(/\{string\}/g, "(?:\"([^\"]*)\"|'([^']*)')");
-    pattern = pattern.replace(/\{word\}/g, "(\\S+)");
+    pattern = pattern.replace(/\{int\}/g, '(-?\\d+)');
+    pattern = pattern.replace(/\{float\}/g, '(-?\\d+\\.?\\d*)');
+    pattern = pattern.replace(/\{string\}/g, '(?:"([^"]*)"|\'([^\']*)\')');
+    pattern = pattern.replace(/\{word\}/g, '(\\S+)');
 
     // Anchor the pattern
     return new RegExp(`^${pattern}$`);

@@ -1,5 +1,5 @@
-import { Given, When, Then } from "@cucumber/cucumber";
-import { strict as assert } from "assert";
+import { Given, When, Then } from '@cucumber/cucumber';
+import { strict as assert } from 'assert';
 
 // State management for calculator
 interface CalculatorState {
@@ -8,7 +8,7 @@ interface CalculatorState {
   result?: number;
   initialized: boolean;
   displayCleared: boolean;
-  mode?: "addition" | "multiplication";
+  mode?: 'addition' | 'multiplication';
 }
 
 const state: CalculatorState = {
@@ -27,27 +27,27 @@ export function resetCalculatorState() {
 }
 
 // Scenario Outline steps
-Given("I have numbers {int} and {int}", (a: number, b: number) => {
+Given('I have numbers {int} and {int}', (a: number, b: number) => {
   state.a = a;
   state.b = b;
 });
 
-When("I {word} them", (operation: string) => {
+When('I {word} them', (operation: string) => {
   if (state.a === undefined || state.b === undefined) {
-    throw new Error("Numbers not set");
+    throw new Error('Numbers not set');
   }
 
   switch (operation) {
-    case "add":
+    case 'add':
       state.result = state.a + state.b;
       break;
-    case "subtract":
+    case 'subtract':
       state.result = state.a - state.b;
       break;
-    case "multiply":
+    case 'multiply':
       state.result = state.a * state.b;
       break;
-    case "divide":
+    case 'divide':
       state.result = state.a / state.b;
       break;
     default:
@@ -55,63 +55,63 @@ When("I {word} them", (operation: string) => {
   }
 });
 
-Then("the result should be {int}", (expected: number) => {
+Then('the result should be {int}', (expected: number) => {
   assert.strictEqual(state.result, expected);
 });
 
 // Background steps
-Given("the calculator is initialized", () => {
+Given('the calculator is initialized', () => {
   state.initialized = true;
 });
 
-Given("the display is cleared", () => {
+Given('the display is cleared', () => {
   state.displayCleared = true;
 });
 
 // Addition operation - supports both Background and Rule contexts
-When("I add {int} and {int}", (a: number, b: number) => {
+When('I add {int} and {int}', (a: number, b: number) => {
   // Check for background initialization (if set)
   if (state.displayCleared && !state.initialized) {
-    throw new Error("Calculator not properly initialized");
+    throw new Error('Calculator not properly initialized');
   }
 
   // Check for Rule mode (if set)
-  if (state.mode && state.mode !== "addition") {
-    throw new Error("Calculator not in addition mode");
+  if (state.mode && state.mode !== 'addition') {
+    throw new Error('Calculator not in addition mode');
   }
 
   state.result = a + b;
 });
 
 // Multiplication operation - supports both Background and Rule contexts
-When("I multiply {int} and {int}", (a: number, b: number) => {
+When('I multiply {int} and {int}', (a: number, b: number) => {
   // Check for background initialization (if set)
   if (state.displayCleared && !state.initialized) {
-    throw new Error("Calculator not properly initialized");
+    throw new Error('Calculator not properly initialized');
   }
 
   // Check for Rule mode (if set)
-  if (state.mode && state.mode !== "multiplication") {
-    throw new Error("Calculator not in multiplication mode");
+  if (state.mode && state.mode !== 'multiplication') {
+    throw new Error('Calculator not in multiplication mode');
   }
 
   state.result = a * b;
 });
 
-When("I subtract {int} from {int}", (b: number, a: number) => {
+When('I subtract {int} from {int}', (b: number, a: number) => {
   if (!state.initialized || !state.displayCleared) {
-    throw new Error("Calculator not properly initialized");
+    throw new Error('Calculator not properly initialized');
   }
   state.result = a - b;
 });
 
 // Rule-specific background steps
-Given("the calculator is in addition mode", () => {
-  state.mode = "addition";
+Given('the calculator is in addition mode', () => {
+  state.mode = 'addition';
   state.initialized = true;
 });
 
-Given("the calculator is in multiplication mode", () => {
-  state.mode = "multiplication";
+Given('the calculator is in multiplication mode', () => {
+  state.mode = 'multiplication';
   state.initialized = true;
 });

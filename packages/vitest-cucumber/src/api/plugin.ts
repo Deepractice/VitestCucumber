@@ -1,6 +1,6 @@
-import type { Plugin } from "vite";
-import type { VitestCucumberPluginOptions } from "~/types";
-import { FeatureTransformer } from "~/core/transformer";
+import type { Plugin } from 'vite';
+import type { VitestCucumberPluginOptions } from '~/types';
+import { FeatureTransformer } from '~/core/transformer';
 
 /**
  * Vitest Cucumber plugin
@@ -8,18 +8,18 @@ import { FeatureTransformer } from "~/core/transformer";
 export function vitestCucumber(
   options: VitestCucumberPluginOptions = {},
 ): Plugin {
-  const stepsDir = options.steps || "tests/steps";
+  const stepsDir = options.steps || 'tests/steps';
   const transformer = new FeatureTransformer(stepsDir);
 
   return {
-    name: "vitest-cucumber",
+    name: 'vitest-cucumber',
 
     /**
      * Transform .feature files to test code
      */
     transform(code: string, id: string) {
       // Only process .feature files
-      if (!id.endsWith(".feature")) {
+      if (!id.endsWith('.feature')) {
         return null;
       }
 

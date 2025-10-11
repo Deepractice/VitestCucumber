@@ -1,5 +1,5 @@
-import * as Gherkin from "@cucumber/gherkin";
-import * as Messages from "@cucumber/messages";
+import * as Gherkin from '@cucumber/gherkin';
+import * as Messages from '@cucumber/messages';
 
 /**
  * Wrapper around @cucumber/gherkin parser

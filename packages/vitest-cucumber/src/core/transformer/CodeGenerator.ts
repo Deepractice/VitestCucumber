@@ -1,4 +1,4 @@
-import type { Feature, Scenario, Step, Background, Rule } from "~/types";
+import type { Feature, Scenario, Step, Background, Rule } from '~/types';
 
 /**
  * Generate Vitest test code from Feature
@@ -17,40 +17,40 @@ export class CodeGenerator {
     lines.push(
       "import { StepExecutor, ContextManager, DataTable, HookRegistry } from '@deepracticex/vitest-cucumber/runtime';",
     );
-    lines.push("");
+    lines.push('');
 
     // Import step definitions and hooks
     // This ensures step definitions are registered before tests run
     if (stepFiles.length > 0) {
-      lines.push("// Step definitions and hooks");
+      lines.push('// Step definitions and hooks');
       for (const stepFile of stepFiles) {
         // Use absolute path from project root
-        const importPath = `/${stepFile.replace(/\\/g, "/").replace(/\.ts$/, "")}`;
+        const importPath = `/${stepFile.replace(/\\/g, '/').replace(/\.ts$/, '')}`;
         lines.push(`import '${importPath}';`);
       }
-      lines.push("");
+      lines.push('');
     }
 
     // Feature describe block
     lines.push(`describe('${this.escapeString(feature.name)}', () => {`);
 
     // Generate BeforeAll/AfterAll hooks
-    lines.push("");
-    lines.push("  beforeAll(async () => {");
-    lines.push("    const hookRegistry = HookRegistry.getInstance();");
-    lines.push("    const contextManager = new ContextManager();");
+    lines.push('');
+    lines.push('  beforeAll(async () => {');
+    lines.push('    const hookRegistry = HookRegistry.getInstance();');
+    lines.push('    const contextManager = new ContextManager();');
     lines.push(
       "    await hookRegistry.executeHooks('BeforeAll', contextManager.getContext());",
     );
-    lines.push("  });");
-    lines.push("");
-    lines.push("  afterAll(async () => {");
-    lines.push("    const hookRegistry = HookRegistry.getInstance();");
-    lines.push("    const contextManager = new ContextManager();");
+    lines.push('  });');
+    lines.push('');
+    lines.push('  afterAll(async () => {');
+    lines.push('    const hookRegistry = HookRegistry.getInstance();');
+    lines.push('    const contextManager = new ContextManager();');
     lines.push(
       "    await hookRegistry.executeHooks('AfterAll', contextManager.getContext());",
     );
-    lines.push("  });");
+    lines.push('  });');
 
     // Generate feature-level background
     if (feature.background) {
@@ -73,9 +73,9 @@ export class CodeGenerator {
       }
     }
 
-    lines.push("});");
+    lines.push('});');
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -83,20 +83,20 @@ export class CodeGenerator {
    */
   private generateScenario(scenario: Scenario, indent: number): string {
     const lines: string[] = [];
-    const ind = "  ".repeat(indent);
+    const ind = '  '.repeat(indent);
 
-    lines.push("");
+    lines.push('');
     lines.push(`${ind}it('${this.escapeString(scenario.name)}', async () => {`);
     lines.push(`${ind}  const hookRegistry = HookRegistry.getInstance();`);
     lines.push(`${ind}  const contextManager = new ContextManager();`);
     lines.push(`${ind}  const context = contextManager.getContext();`);
     lines.push(`${ind}  const executor = new StepExecutor(context);`);
-    lines.push("");
+    lines.push('');
 
     // Execute Before hooks
     lines.push(`${ind}  // Execute Before hooks`);
     lines.push(`${ind}  await hookRegistry.executeHooks('Before', context);`);
-    lines.push("");
+    lines.push('');
 
     // Generate steps
     lines.push(`${ind}  // Execute steps`);
@@ -110,7 +110,7 @@ export class CodeGenerator {
 
     lines.push(`${ind}});`);
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -118,7 +118,7 @@ export class CodeGenerator {
    */
   private generateStep(step: Step, indent: number): string {
     const lines: string[] = [];
-    const ind = "  ".repeat(indent);
+    const ind = '  '.repeat(indent);
 
     // Create step object
     lines.push(`${ind}await executor.execute({`);
@@ -145,9 +145,9 @@ export class CodeGenerator {
     }
 
     lines.push(`${ind}});`);
-    lines.push("");
+    lines.push('');
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -155,12 +155,12 @@ export class CodeGenerator {
    */
   private escapeString(str: string): string {
     return str
-      .replace(/\\/g, "\\\\")
+      .replace(/\\/g, '\\\\')
       .replace(/'/g, "\\'")
       .replace(/"/g, '\\"')
-      .replace(/\n/g, "\\n")
-      .replace(/\r/g, "\\r")
-      .replace(/\t/g, "\\t");
+      .replace(/\n/g, '\\n')
+      .replace(/\r/g, '\\r')
+      .replace(/\t/g, '\\t');
   }
 
   /**
@@ -168,15 +168,15 @@ export class CodeGenerator {
    */
   private generateBackground(background: Background, indent: number): string {
     const lines: string[] = [];
-    const ind = "  ".repeat(indent);
+    const ind = '  '.repeat(indent);
 
-    lines.push("");
+    lines.push('');
     lines.push(`${ind}beforeEach(async () => {`);
     lines.push(`${ind}  const contextManager = new ContextManager();`);
     lines.push(
       `${ind}  const executor = new StepExecutor(contextManager.getContext());`,
     );
-    lines.push("");
+    lines.push('');
 
     // Generate background steps
     for (const step of background.steps) {
@@ -185,7 +185,7 @@ export class CodeGenerator {
 
     lines.push(`${ind}});`);
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -193,9 +193,9 @@ export class CodeGenerator {
    */
   private generateRule(rule: Rule, indent: number): string {
     const lines: string[] = [];
-    const ind = "  ".repeat(indent);
+    const ind = '  '.repeat(indent);
 
-    lines.push("");
+    lines.push('');
     lines.push(`${ind}describe('${this.escapeString(rule.name)}', () => {`);
 
     // Generate rule-level background
@@ -214,7 +214,7 @@ export class CodeGenerator {
 
     lines.push(`${ind}});`);
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -222,13 +222,13 @@ export class CodeGenerator {
    */
   private generateScenarioOutline(scenario: Scenario, indent: number): string {
     const lines: string[] = [];
-    const ind = "  ".repeat(indent);
+    const ind = '  '.repeat(indent);
 
     if (!scenario.examples || scenario.examples.length === 0) {
       return this.generateScenario(scenario, indent);
     }
 
-    lines.push("");
+    lines.push('');
     lines.push(`${ind}describe('${this.escapeString(scenario.name)}', () => {`);
 
     // Generate a test for each example row
@@ -239,15 +239,15 @@ export class CodeGenerator {
         // Create example map
         const exampleMap: Record<string, string> = {};
         headers.forEach((header, i) => {
-          exampleMap[header] = row[i] || "";
+          exampleMap[header] = row[i] || '';
         });
 
         // Create test name from example values
         const exampleDesc = headers
           .map((h) => `${h}=${exampleMap[h]}`)
-          .join(", ");
+          .join(', ');
 
-        lines.push("");
+        lines.push('');
         lines.push(
           `${ind}  it('Example: ${this.escapeString(exampleDesc)}', async () => {`,
         );
@@ -257,14 +257,14 @@ export class CodeGenerator {
         lines.push(`${ind}    const contextManager = new ContextManager();`);
         lines.push(`${ind}    const context = contextManager.getContext();`);
         lines.push(`${ind}    const executor = new StepExecutor(context);`);
-        lines.push("");
+        lines.push('');
 
         // Execute Before hooks
         lines.push(`${ind}    // Execute Before hooks`);
         lines.push(
           `${ind}    await hookRegistry.executeHooks('Before', context);`,
         );
-        lines.push("");
+        lines.push('');
 
         // Generate steps with replaced placeholders
         lines.push(`${ind}    // Execute steps`);
@@ -288,7 +288,7 @@ export class CodeGenerator {
 
     lines.push(`${ind}});`);
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -302,7 +302,7 @@ export class CodeGenerator {
 
     for (const [key, value] of Object.entries(example)) {
       const placeholder = `<${key}>`;
-      result = result.replace(new RegExp(placeholder, "g"), value);
+      result = result.replace(new RegExp(placeholder, 'g'), value);
     }
 
     return result;

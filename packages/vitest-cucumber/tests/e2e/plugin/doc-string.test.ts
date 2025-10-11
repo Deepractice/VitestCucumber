@@ -2,28 +2,28 @@
  * E2E tests for DocString support
  * Tests scenarios from features/plugin-step-definitions.feature lines 105-127
  */
-import { describe, it, expect } from "vitest";
-import { runCucumberFeature } from "../../../src/core/runner";
-import path from "path";
-import { fileURLToPath } from "url";
+import { describe, it, expect } from 'vitest';
+import { runCucumberFeature } from '../../../src/core/runner';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const FIXTURES_DIR = path.resolve(__dirname, "../fixtures");
-const STEPS_DIR = path.join(FIXTURES_DIR, "steps");
+const FIXTURES_DIR = path.resolve(__dirname, '../fixtures');
+const STEPS_DIR = path.join(FIXTURES_DIR, 'steps');
 
-describe("DocString Support", () => {
-  describe("DocString as additional parameter", () => {
-    it("should pass DocString as last parameter to step definition", () => {
+describe('DocString Support', () => {
+  describe('DocString as additional parameter', () => {
+    it('should pass DocString as last parameter to step definition', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-basic.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-basic.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       if (!result.success) {
-        console.log("Output:", result.output);
-        console.log("Error:", result.error);
+        console.log('Output:', result.output);
+        console.log('Error:', result.error);
       }
 
       expect(result.success).toBe(true);
@@ -38,10 +38,10 @@ describe("DocString Support", () => {
       }
     });
 
-    it("should work with other parameters before DocString", () => {
+    it('should work with other parameters before DocString', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-with-params.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-with-params.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -55,26 +55,26 @@ describe("DocString Support", () => {
       }
     });
 
-    it("should work with multiple parameters and DocString", () => {
+    it('should work with multiple parameters and DocString', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-multiple-params.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-multiple-params.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
     });
   });
 
-  describe("Multi-line content preservation", () => {
-    it("should preserve line breaks in DocString", () => {
+  describe('Multi-line content preservation', () => {
+    it('should preserve line breaks in DocString', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-multiline.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-multiline.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       if (!result.success) {
-        console.log("Output:", result.output);
-        console.log("Error:", result.error);
+        console.log('Output:', result.output);
+        console.log('Error:', result.error);
       }
 
       expect(result.success).toBe(true);
@@ -88,10 +88,10 @@ describe("DocString Support", () => {
       }
     });
 
-    it("should preserve indentation in DocString", () => {
+    it('should preserve indentation in DocString', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-indentation.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-indentation.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -105,26 +105,26 @@ describe("DocString Support", () => {
       }
     });
 
-    it("should preserve empty lines in DocString", () => {
+    it('should preserve empty lines in DocString', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-empty-lines.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-empty-lines.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
     });
   });
 
-  describe("Content type handling", () => {
-    it("should support JSON content type", () => {
+  describe('Content type handling', () => {
+    it('should support JSON content type', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-json.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-json.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       if (!result.success) {
-        console.log("Output:", result.output);
-        console.log("Error:", result.error);
+        console.log('Output:', result.output);
+        console.log('Error:', result.error);
       }
 
       expect(result.success).toBe(true);
@@ -138,10 +138,10 @@ describe("DocString Support", () => {
       }
     });
 
-    it("should support XML content type", () => {
+    it('should support XML content type', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-xml.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-xml.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -155,30 +155,30 @@ describe("DocString Support", () => {
       }
     });
 
-    it("should support Markdown content type", () => {
+    it('should support Markdown content type', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-markdown.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-markdown.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
     });
 
-    it("should support plain text (no content type)", () => {
+    it('should support plain text (no content type)', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-plain.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-plain.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
     });
   });
 
-  describe("DocString edge cases", () => {
-    it("should handle DocString with special characters", () => {
+  describe('DocString edge cases', () => {
+    it('should handle DocString with special characters', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-special-chars.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-special-chars.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -192,39 +192,39 @@ describe("DocString Support", () => {
       }
     });
 
-    it("should handle empty DocString", () => {
+    it('should handle empty DocString', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-empty.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-empty.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
     });
 
-    it("should handle DocString with only whitespace", () => {
+    it('should handle DocString with only whitespace', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-whitespace.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-whitespace.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
     });
 
-    it("should handle very long DocString", () => {
+    it('should handle very long DocString', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-long.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-long.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
     });
   });
 
-  describe("DocString use cases", () => {
-    it("should support JSON configuration in DocString", () => {
+  describe('DocString use cases', () => {
+    it('should support JSON configuration in DocString', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-json-config.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-json-config.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
@@ -238,28 +238,28 @@ describe("DocString Support", () => {
       }
     });
 
-    it("should support code snippets in DocString", () => {
+    it('should support code snippets in DocString', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-code.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-code.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
     });
 
-    it("should support SQL queries in DocString", () => {
+    it('should support SQL queries in DocString', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-sql.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-sql.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);
     });
 
-    it("should support HTML content in DocString", () => {
+    it('should support HTML content in DocString', () => {
       const result = runCucumberFeature(
-        path.join(FIXTURES_DIR, "doc-string-html.feature"),
-        path.join(STEPS_DIR, "doc-string.steps.ts"),
+        path.join(FIXTURES_DIR, 'doc-string-html.feature'),
+        path.join(STEPS_DIR, 'doc-string.steps.ts'),
       );
 
       expect(result.success).toBe(true);

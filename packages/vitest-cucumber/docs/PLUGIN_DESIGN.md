@@ -15,7 +15,7 @@ This document outlines the design for converting `@deepracticex/vitest-cucumber`
 ```javascript
 export default function vitestCucumberPlugin() {
   return {
-    name: "vitest-cucumber-transform",
+    name: 'vitest-cucumber-transform',
     configResolved: (resolvedConfig) => {
       // Store config
     },
@@ -56,15 +56,15 @@ export default function vitestCucumberPlugin() {
 **Library Usage**:
 
 ```typescript
-const feature = await loadFeature("path.feature");
+const feature = await loadFeature('path.feature');
 
 describeFeature(feature, ({ Scenario, Background }) => {
   Background(({ Given, When }) => {
-    Given("step", () => {});
+    Given('step', () => {});
   });
 
-  Scenario("name", ({ Given, When, Then }) => {
-    Given("step", () => {});
+  Scenario('name', ({ Given, When, Then }) => {
+    Given('step', () => {});
   });
 });
 ```
@@ -74,8 +74,8 @@ describeFeature(feature, ({ Scenario, Background }) => {
 ```typescript
 // Plugin watches .feature files and updates .spec.ts
 VitestCucumberPlugin({
-  featureFilesDir: "features/",
-  specFilesDir: "tests/",
+  featureFilesDir: 'features/',
+  specFilesDir: 'tests/',
 });
 ```
 
@@ -130,7 +130,7 @@ resolveId -> load -> transform
 ```typescript
 // Option 1: Plugin-based (automatic)
 // vitest.config.ts
-import { vitestCucumber } from "@deepracticex/vitest-cucumber/plugin";
+import { vitestCucumber } from '@deepracticex/vitest-cucumber/plugin';
 
 export default defineConfig({
   plugins: [vitestCucumber()],
@@ -138,11 +138,11 @@ export default defineConfig({
 
 // Option 2: API-based (explicit, for our current usage)
 // tests/cucumber.test.ts
-import { generateCucumberTests } from "@deepracticex/vitest-cucumber";
+import { generateCucumberTests } from '@deepracticex/vitest-cucumber';
 
 await generateCucumberTests({
-  featureGlob: "features/**/*.feature",
-  stepGlob: "tests/steps/**/*.ts",
+  featureGlob: 'features/**/*.feature',
+  stepGlob: 'tests/steps/**/*.ts',
 });
 ```
 
@@ -236,10 +236,10 @@ await generateCucumberTests({
 
 ```typescript
 // src/api/plugin.ts - Public API
-import type { Plugin } from "vite";
-import type { VitestCucumberPluginOptions } from "~/types";
-import { FeatureTransformer } from "~/core/transformer";
-import { StepDiscovery } from "~/core/discovery";
+import type { Plugin } from 'vite';
+import type { VitestCucumberPluginOptions } from '~/types';
+import { FeatureTransformer } from '~/core/transformer';
+import { StepDiscovery } from '~/core/discovery';
 
 export function vitestCucumber(
   options: VitestCucumberPluginOptions = {},
@@ -248,13 +248,13 @@ export function vitestCucumber(
   let config: VitestCucumberPluginOptions;
 
   return {
-    name: "vitest-cucumber",
+    name: 'vitest-cucumber',
 
     // Store configuration
     configResolved(resolvedConfig) {
       config = {
-        include: ["**/*.feature"],
-        stepDefinitions: "**/*.steps.{ts,js}",
+        include: ['**/*.feature'],
+        stepDefinitions: '**/*.steps.{ts,js}',
         requireStepDefinitions: false,
         failOnUndefinedSteps: true,
         ...options,
@@ -286,9 +286,9 @@ export function vitestCucumber(
 
 ```typescript
 // src/core/transformer/FeatureTransformer.ts
-import { GherkinParser } from "~/core/parser";
-import { CodeGenerator } from "~/core/transformer";
-import type { VitestCucumberPluginOptions } from "~/types";
+import { GherkinParser } from '~/core/parser';
+import { CodeGenerator } from '~/core/transformer';
+import type { VitestCucumberPluginOptions } from '~/types';
 
 export class FeatureTransformer {
   private parser: GherkinParser;
@@ -307,7 +307,7 @@ export class FeatureTransformer {
     const code = this.generator.generate(feature, {
       featureFilePath,
       stepDefinitions: this.options.stepDefinitions,
-      runtimeModule: "@deepracticex/vitest-cucumber/runtime",
+      runtimeModule: '@deepracticex/vitest-cucumber/runtime',
     });
 
     return code;
@@ -319,32 +319,32 @@ export class FeatureTransformer {
 
 ```typescript
 // Example generated code for a .feature file:
-import { describe, test, beforeAll, afterAll } from "vitest";
+import { describe, test, beforeAll, afterAll } from 'vitest';
 import {
   executeStep,
   executeBackground,
-} from "@deepracticex/vitest-cucumber/runtime";
+} from '@deepracticex/vitest-cucumber/runtime';
 
 // Auto-import step definitions
-import "../steps/math.steps";
+import '../steps/math.steps';
 
-describe("Feature: Calculator", () => {
-  describe("Scenario: Add two numbers", () => {
+describe('Feature: Calculator', () => {
+  describe('Scenario: Add two numbers', () => {
     const steps = [
-      { type: "Given", text: "I have numbers 2 and 3" },
-      { type: "When", text: "I add them together" },
-      { type: "Then", text: "the result should be 5" },
+      { type: 'Given', text: 'I have numbers 2 and 3' },
+      { type: 'When', text: 'I add them together' },
+      { type: 'Then', text: 'the result should be 5' },
     ];
 
-    test("Given I have numbers 2 and 3", async () => {
+    test('Given I have numbers 2 and 3', async () => {
       await executeStep(steps[0]);
     });
 
-    test("When I add them together", async () => {
+    test('When I add them together', async () => {
       await executeStep(steps[1]);
     });
 
-    test("Then the result should be 5", async () => {
+    test('Then the result should be 5', async () => {
       await executeStep(steps[2]);
     });
   });
@@ -354,17 +354,17 @@ describe("Feature: Calculator", () => {
 **Alternative Structure (Sequential Steps)**:
 
 ```typescript
-describe("Scenario: Add two numbers", () => {
-  test("complete scenario", async () => {
+describe('Scenario: Add two numbers', () => {
+  test('complete scenario', async () => {
     const context = {};
 
     await executeStep(
-      { type: "Given", text: "I have numbers 2 and 3" },
+      { type: 'Given', text: 'I have numbers 2 and 3' },
       context,
     );
-    await executeStep({ type: "When", text: "I add them together" }, context);
+    await executeStep({ type: 'When', text: 'I add them together' }, context);
     await executeStep(
-      { type: "Then", text: "the result should be 5" },
+      { type: 'Then', text: 'the result should be 5' },
       context,
     );
   });
@@ -375,7 +375,7 @@ describe("Scenario: Add two numbers", () => {
 
 ```typescript
 // src/core/runtime/StepRegistry.ts
-import type { StepDefinition } from "~/types";
+import type { StepDefinition } from '~/types';
 
 export class StepRegistry {
   private static steps: Map<string, StepDefinition> = new Map();
@@ -398,14 +398,14 @@ export class StepRegistry {
   }
 
   private static isTypeMatch(defType: string, stepType: string): boolean {
-    return defType === stepType || defType === "And" || defType === "But";
+    return defType === stepType || defType === 'And' || defType === 'But';
   }
 
   private static isTextMatch(
     expression: string | RegExp,
     text: string,
   ): boolean {
-    if (typeof expression === "string") {
+    if (typeof expression === 'string') {
       const cucumberExpr = new CucumberExpression(expression, {});
       return cucumberExpr.match(text) !== null;
     }
@@ -418,9 +418,9 @@ export class StepRegistry {
 }
 
 // src/core/runtime/StepExecutor.ts
-import { CucumberExpression } from "@cucumber/cucumber-expressions";
-import { StepRegistry } from "./StepRegistry";
-import type { Step, StepContext } from "~/types";
+import { CucumberExpression } from '@cucumber/cucumber-expressions';
+import { StepRegistry } from './StepRegistry';
+import type { Step, StepContext } from '~/types';
 
 export class StepExecutor {
   async execute(step: Step, context: StepContext = {}): Promise<void> {
@@ -436,7 +436,7 @@ export class StepExecutor {
   }
 
   private extractParameters(text: string, expression: string | RegExp): any[] {
-    if (typeof expression === "string") {
+    if (typeof expression === 'string') {
       const cucumberExpr = new CucumberExpression(expression, {});
       const match = cucumberExpr.match(text);
       return match ? match.map((arg) => arg.getValue()) : [];
@@ -448,59 +448,59 @@ export class StepExecutor {
 }
 
 // src/core/runtime/index.ts - Internal exports
-export { StepRegistry } from "./StepRegistry";
-export { StepExecutor } from "./StepExecutor";
-export { ContextManager } from "./ContextManager";
+export { StepRegistry } from './StepRegistry';
+export { StepExecutor } from './StepExecutor';
+export { ContextManager } from './ContextManager';
 ```
 
 #### Phase 5: Step Definition API
 
 ```typescript
 // src/api/step-definitions.ts - Public API
-import { StepRegistry } from "~/core/runtime";
-import type { StepFunction } from "~/types";
+import { StepRegistry } from '~/core/runtime';
+import type { StepFunction } from '~/types';
 
 export function Given(expression: string | RegExp, fn: StepFunction): void {
-  StepRegistry.register({ type: "Given", expression, fn });
+  StepRegistry.register({ type: 'Given', expression, fn });
 }
 
 export function When(expression: string | RegExp, fn: StepFunction): void {
-  StepRegistry.register({ type: "When", expression, fn });
+  StepRegistry.register({ type: 'When', expression, fn });
 }
 
 export function Then(expression: string | RegExp, fn: StepFunction): void {
-  StepRegistry.register({ type: "Then", expression, fn });
+  StepRegistry.register({ type: 'Then', expression, fn });
 }
 
 export function And(expression: string | RegExp, fn: StepFunction): void {
-  StepRegistry.register({ type: "And", expression, fn });
+  StepRegistry.register({ type: 'And', expression, fn });
 }
 
 export function But(expression: string | RegExp, fn: StepFunction): void {
-  StepRegistry.register({ type: "But", expression, fn });
+  StepRegistry.register({ type: 'But', expression, fn });
 }
 
 // src/api/index.ts - Main export
-export { Given, When, Then, And, But } from "./step-definitions";
-export { Before, After, BeforeAll, AfterAll } from "./hooks";
-export { vitestCucumber } from "./plugin";
-export { generateCucumberTests } from "./generate-tests";
+export { Given, When, Then, And, But } from './step-definitions';
+export { Before, After, BeforeAll, AfterAll } from './hooks';
+export { vitestCucumber } from './plugin';
+export { generateCucumberTests } from './generate-tests';
 
 // Usage in step definitions:
 // tests/steps/math.steps.ts
-import { Given, When, Then } from "@deepracticex/vitest-cucumber";
-import { expect } from "vitest";
+import { Given, When, Then } from '@deepracticex/vitest-cucumber';
+import { expect } from 'vitest';
 
-Given("I have numbers {int} and {int}", function (a: number, b: number) {
+Given('I have numbers {int} and {int}', function (a: number, b: number) {
   this.a = a;
   this.b = b;
 });
 
-When("I add them together", function () {
+When('I add them together', function () {
   this.result = this.a + this.b;
 });
 
-Then("the result should be {int}", function (expected: number) {
+Then('the result should be {int}', function (expected: number) {
   expect(this.result).toBe(expected);
 });
 ```
@@ -512,10 +512,10 @@ Then("the result should be {int}", function (expected: number) {
 **Option A: One test() per step** (Recommended for Phase 1)
 
 ```typescript
-describe("Scenario: X", () => {
-  test("Given step", () => {});
-  test("When step", () => {});
-  test("Then step", () => {});
+describe('Scenario: X', () => {
+  test('Given step', () => {});
+  test('When step', () => {});
+  test('Then step', () => {});
 });
 ```
 
@@ -533,8 +533,8 @@ describe("Scenario: X", () => {
 **Option B: One test() per scenario**
 
 ```typescript
-describe("Scenario: X", () => {
-  test("complete scenario", () => {
+describe('Scenario: X', () => {
+  test('complete scenario', () => {
     // Execute all steps sequentially
   });
 });
@@ -559,8 +559,8 @@ describe("Scenario: X", () => {
 
 ```typescript
 // Generated code
-import "../steps/math.steps";
-import "../steps/user.steps";
+import '../steps/math.steps';
+import '../steps/user.steps';
 ```
 
 **Pros**:
@@ -579,7 +579,7 @@ import "../steps/user.steps";
 ```typescript
 // Load all step definitions before tests run
 beforeAll(() => {
-  await loadStepDefinitions("**/*.steps.ts");
+  await loadStepDefinitions('**/*.steps.ts');
 });
 ```
 
@@ -731,7 +731,7 @@ export interface VitestCucumberPluginOptions {
 }
 
 // src/types/step-definition.ts
-export type StepType = "Given" | "When" | "Then" | "And" | "But";
+export type StepType = 'Given' | 'When' | 'Then' | 'And' | 'But';
 
 export interface StepDefinition {
   type: StepType;
@@ -788,9 +788,9 @@ export interface DocString {
 }
 
 // src/types/index.ts
-export type { VitestCucumberPluginOptions } from "./plugin-options";
-export type { StepType, StepDefinition, StepFunction } from "./step-definition";
-export type { CucumberRunnerOptions } from "./cucumber-config";
+export type { VitestCucumberPluginOptions } from './plugin-options';
+export type { StepType, StepDefinition, StepFunction } from './step-definition';
+export type { CucumberRunnerOptions } from './cucumber-config';
 export type {
   Feature,
   Scenario,
@@ -798,7 +798,7 @@ export type {
   StepContext,
   DataTable,
   DocString,
-} from "./feature";
+} from './feature';
 ```
 
 ## Testing Strategy
@@ -829,8 +829,8 @@ export type {
 ```typescript
 // Still works
 await generateCucumberTests({
-  featureGlob: "features/**/*.feature",
-  stepGlob: "tests/steps/**/*.ts",
+  featureGlob: 'features/**/*.feature',
+  stepGlob: 'tests/steps/**/*.ts',
 });
 ```
 

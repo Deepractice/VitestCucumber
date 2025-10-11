@@ -1,4 +1,4 @@
-import type * as Messages from "@cucumber/messages";
+import type * as Messages from '@cucumber/messages';
 import type {
   Feature,
   Scenario,
@@ -7,9 +7,9 @@ import type {
   Background,
   Examples,
   Rule,
-} from "~/types";
-import { DataTable } from "../runtime/DataTable";
-import { GherkinParser } from "./GherkinParser";
+} from '~/types';
+import { DataTable } from '../runtime/DataTable';
+import { GherkinParser } from './GherkinParser';
 
 /**
  * Parse feature files into our Feature type
@@ -28,7 +28,7 @@ export class FeatureParser {
     const doc = this.gherkinParser.parse(content);
 
     if (!doc.feature) {
-      throw new Error("No feature found in document");
+      throw new Error('No feature found in document');
     }
 
     return this.convertFeature(doc.feature);
@@ -53,7 +53,7 @@ export class FeatureParser {
     }
 
     return {
-      name: feature.name || "Unnamed Feature",
+      name: feature.name || 'Unnamed Feature',
       description: feature.description,
       background,
       scenarios,
@@ -71,7 +71,7 @@ export class FeatureParser {
     const isOutline = examples && examples.length > 0;
 
     return {
-      name: scenario.name || "Unnamed Scenario",
+      name: scenario.name || 'Unnamed Scenario',
       steps,
       tags: scenario.tags?.map((t) => t.name),
       isOutline: isOutline || undefined,
@@ -144,7 +144,7 @@ export class FeatureParser {
     }
 
     return {
-      name: rule.name || "Unnamed Rule",
+      name: rule.name || 'Unnamed Rule',
       scenarios,
       background,
       tags: rule.tags?.map((t) => t.name),

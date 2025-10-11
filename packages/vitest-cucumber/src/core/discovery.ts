@@ -1,6 +1,6 @@
-import { glob } from "glob";
-import type { CucumberRunnerOptions, FeatureTestResult } from "~/types";
-import { runCucumberFeature } from "./runner";
+import { glob } from 'glob';
+import type { CucumberRunnerOptions, FeatureTestResult } from '~/types';
+import { runCucumberFeature } from './runner';
 
 /**
  * Discover all feature files matching the glob pattern

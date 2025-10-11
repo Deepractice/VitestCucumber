@@ -1,4 +1,4 @@
-import type { StepContext } from "~/types";
+import type { StepContext } from '~/types';
 
 /**
  * Hook function type
@@ -9,7 +9,7 @@ export type HookFunction = (this: StepContext) => void | Promise<void>;
  * Hook definition
  */
 export interface HookDefinition {
-  type: "Before" | "After" | "BeforeAll" | "AfterAll";
+  type: 'Before' | 'After' | 'BeforeAll' | 'AfterAll';
   fn: HookFunction;
 }
 
@@ -47,7 +47,7 @@ export class HookRegistry {
    * Get all hooks of a specific type
    */
   public getHooks(
-    type: "Before" | "After" | "BeforeAll" | "AfterAll",
+    type: 'Before' | 'After' | 'BeforeAll' | 'AfterAll',
   ): HookDefinition[] {
     return this.hooks.filter((hook) => hook.type === type);
   }
@@ -56,7 +56,7 @@ export class HookRegistry {
    * Execute all hooks of a specific type
    */
   public async executeHooks(
-    type: "Before" | "After" | "BeforeAll" | "AfterAll",
+    type: 'Before' | 'After' | 'BeforeAll' | 'AfterAll',
     context: StepContext,
   ): Promise<void> {
     const hooks = this.getHooks(type);

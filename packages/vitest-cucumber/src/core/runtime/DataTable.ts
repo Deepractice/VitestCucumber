@@ -43,7 +43,7 @@ export class DataTable {
       const key = row[0];
       const value = row[1];
       if (key !== undefined) {
-        result[key] = value || "";
+        result[key] = value || '';
       }
     }
 
@@ -79,7 +79,7 @@ export class DataTable {
       for (let j = 0; j < headers.length; j++) {
         const header = headers[j];
         if (header !== undefined) {
-          obj[header] = row[j] || "";
+          obj[header] = row[j] || '';
         }
       }
 

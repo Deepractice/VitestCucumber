@@ -6,7 +6,10 @@
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build",
     "clean": "pnpm -r --filter './packages/*' clean",
-    "test": "pnpm -r --filter './packages/*' test"
+    "test": "pnpm -r --filter './packages/*' test",
+    "prepare": "lefthook install",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "repository": {
     "type": "git",
@@ -17,5 +20,11 @@
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "lefthook": "^1.10.1",
+    "prettier": "^3.4.2"
   }
 }

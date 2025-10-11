@@ -1,6 +1,6 @@
-import type { Step, StepContext } from "~/types";
-import { StepRegistry } from "./StepRegistry";
-import { ParameterTypeConverter } from "./ParameterTypeConverter";
+import type { Step, StepContext } from '~/types';
+import { StepRegistry } from './StepRegistry';
+import { ParameterTypeConverter } from './ParameterTypeConverter';
 
 /**
  * Executes steps and extracts parameters
@@ -41,7 +41,7 @@ export class StepExecutor {
    */
   private extractArguments(
     matches: RegExpMatchArray | null,
-    stepDef: import("./StepRegistry").ExtendedStepDefinition,
+    stepDef: import('./StepRegistry').ExtendedStepDefinition,
     step: Step,
   ): any[] {
     const args: any[] = [];

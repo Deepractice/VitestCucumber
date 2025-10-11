@@ -1,8 +1,8 @@
-import type { StepDefinition, StepType } from "~/types";
+import type { StepDefinition, StepType } from '~/types';
 import {
   ParameterTypeConverter,
   type ParameterInfo,
-} from "./ParameterTypeConverter";
+} from './ParameterTypeConverter';
 
 /**
  * Extended step definition with parameter type information
@@ -45,7 +45,7 @@ export class StepRegistry {
     );
 
     const regex =
-      typeof step.pattern === "string"
+      typeof step.pattern === 'string'
         ? ParameterTypeConverter.cucumberExpressionToRegex(step.pattern)
         : step.pattern;
 
@@ -67,7 +67,7 @@ export class StepRegistry {
   ): { step: ExtendedStepDefinition; matches: RegExpMatchArray | null } | null {
     for (const step of this.steps) {
       // Skip if type doesn't match (except for And/But which inherit from previous)
-      if (type !== "And" && type !== "But" && step.type !== type) {
+      if (type !== 'And' && type !== 'But' && step.type !== type) {
         continue;
       }
 

@@ -1,8 +1,8 @@
 /**
  * Type definitions for vitest-cucumber
  */
-export type { VitestCucumberPluginOptions } from "./plugin-options";
-export type { StepType, StepFunction, StepDefinition } from "./step-definition";
+export type { VitestCucumberPluginOptions } from './plugin-options';
+export type { StepType, StepFunction, StepDefinition } from './step-definition';
 export type {
   Step,
   DocString,
@@ -12,10 +12,10 @@ export type {
   Rule,
   Feature,
   StepContext,
-} from "./feature";
+} from './feature';
 
 // Export DataTable as a class (not just type)
-export { DataTable } from "../core/runtime/DataTable";
+export { DataTable } from '../core/runtime/DataTable';
 
 /**
  * Legacy types for integration testing (backward compatibility)

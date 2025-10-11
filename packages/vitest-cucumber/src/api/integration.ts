@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { discoverFeatures, runCucumberFeature } from "~/core";
-import type { CucumberRunnerOptions } from "~/types";
+import { describe, it, expect } from 'vitest';
+import { discoverFeatures, runCucumberFeature } from '~/core';
+import type { CucumberRunnerOptions } from '~/types';
 
 /**
  * Generate Vitest tests for Cucumber features
@@ -26,11 +26,11 @@ export async function generateCucumberTests(
 
   featureFiles.forEach((featureFile) => {
     const featureName = featureFile
-      .replace("features/", "")
-      .replace(".feature", "");
+      .replace('features/', '')
+      .replace('.feature', '');
 
     describe(featureName, () => {
-      it("should pass all scenarios", () => {
+      it('should pass all scenarios', () => {
         const result = runCucumberFeature(
           featureFile,
           options.stepGlob,
@@ -40,13 +40,13 @@ export async function generateCucumberTests(
         if (!result.success) {
           const errorMessage = [
             `Cucumber feature failed: ${featureName}`,
-            "",
-            "Output:",
-            result.output || "",
-            "",
-            "Error:",
-            result.error || "",
-          ].join("\n");
+            '',
+            'Output:',
+            result.output || '',
+            '',
+            'Error:',
+            result.error || '',
+          ].join('\n');
 
           throw new Error(errorMessage);
         }

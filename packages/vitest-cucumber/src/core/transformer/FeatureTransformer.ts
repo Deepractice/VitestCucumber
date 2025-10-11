@@ -1,7 +1,7 @@
-import { FeatureParser } from "~/core/parser";
-import { CodeGenerator } from "./CodeGenerator";
-import { globSync } from "glob";
-import { resolve, dirname } from "node:path";
+import { FeatureParser } from '~/core/parser';
+import { CodeGenerator } from './CodeGenerator';
+import { globSync } from 'glob';
+import { resolve, dirname } from 'node:path';
 
 /**
  * Main transformation orchestrator
@@ -11,7 +11,7 @@ export class FeatureTransformer {
   private generator: CodeGenerator;
   private stepsDir: string;
 
-  constructor(stepsDir: string = "tests/steps") {
+  constructor(stepsDir: string = 'tests/steps') {
     this.parser = new FeatureParser();
     this.stepsDir = stepsDir;
     this.generator = new CodeGenerator();

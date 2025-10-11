@@ -1,5 +1,5 @@
-import { Given, When, Then } from "@cucumber/cucumber";
-import { expect } from "./test-helpers";
+import { Given, When, Then } from '@cucumber/cucumber';
+import { expect } from './test-helpers';
 
 interface UserContext {
   systemInitialized?: boolean;
@@ -7,30 +7,30 @@ interface UserContext {
   users?: Set<string>;
 }
 
-Given("I have initialized the system", function (this: UserContext) {
+Given('I have initialized the system', function (this: UserContext) {
   this.systemInitialized = true;
   this.users = new Set();
 });
 
-Given("I have logged in as admin", function (this: UserContext) {
+Given('I have logged in as admin', function (this: UserContext) {
   expect(this.systemInitialized).toBe(true);
-  this.loggedInUser = "admin";
+  this.loggedInUser = 'admin';
 });
 
-When("I create a new user", function (this: UserContext) {
+When('I create a new user', function (this: UserContext) {
   expect(this.systemInitialized).toBe(true);
-  this.users!.add("newuser");
+  this.users!.add('newuser');
 });
 
-Then("the user should exist", function (this: UserContext) {
-  expect(this.users!.has("newuser")).toBe(true);
+Then('the user should exist', function (this: UserContext) {
+  expect(this.users!.has('newuser')).toBe(true);
 });
 
-When("I delete a user", function (this: UserContext) {
+When('I delete a user', function (this: UserContext) {
   expect(this.systemInitialized).toBe(true);
-  this.users!.delete("testuser");
+  this.users!.delete('testuser');
 });
 
-Then("the user should not exist", function (this: UserContext) {
-  expect(this.users!.has("testuser")).toBe(false);
+Then('the user should not exist', function (this: UserContext) {
+  expect(this.users!.has('testuser')).toBe(false);
 });

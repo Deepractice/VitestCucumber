@@ -1,6 +1,6 @@
-import { execSync } from "child_process";
-import path from "path";
-import type { FeatureTestResult } from "~/types";
+import { execSync } from 'child_process';
+import path from 'path';
+import type { FeatureTestResult } from '~/types';
 
 /**
  * Core runner that executes Cucumber for a single feature file
@@ -11,31 +11,31 @@ export function runCucumberFeature(
   formatOptions: string[] = [],
 ): FeatureTestResult {
   const featureName = featurePath
-    .replace("features/", "")
-    .replace(".feature", "");
+    .replace('features/', '')
+    .replace('.feature', '');
 
   try {
     const formatArgs =
       formatOptions.length > 0
-        ? formatOptions.map((f) => `--format ${f}`).join(" ")
-        : "";
+        ? formatOptions.map((f) => `--format ${f}`).join(' ')
+        : '';
 
     // Find cucumber-js binary
     const cucumberBin = path.resolve(
       process.cwd(),
-      "node_modules/.bin/cucumber-js",
+      'node_modules/.bin/cucumber-js',
     );
 
     const command =
       `"${cucumberBin}" "${featurePath}" --import "${stepGlob}" ${formatArgs}`.trim();
 
     const output = execSync(command, {
-      encoding: "utf-8",
-      stdio: "pipe",
+      encoding: 'utf-8',
+      stdio: 'pipe',
       cwd: process.cwd(),
       env: {
         ...process.env,
-        NODE_OPTIONS: "--import tsx",
+        NODE_OPTIONS: '--import tsx',
       },
     });
 
@@ -46,12 +46,12 @@ export function runCucumberFeature(
       output,
     };
   } catch (error: any) {
-    const errorOutput = error.stderr || error.message || "";
-    const stdout = error.stdout || "";
+    const errorOutput = error.stderr || error.message || '';
+    const stdout = error.stdout || '';
 
     // Check if there are undefined steps with special characters that need escaping
     const hasEscapingIssue =
-      stdout.includes("Undefined") && /\\\//.test(stdout);
+      stdout.includes('Undefined') && /\\\//.test(stdout);
 
     let enhancedError = errorOutput;
     if (hasEscapingIssue) {

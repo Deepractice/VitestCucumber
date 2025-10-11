@@ -15,7 +15,7 @@ export interface Step {
   /**
    * Optional data table attached to step
    */
-  dataTable?: import("../core/runtime/DataTable").DataTable;
+  dataTable?: import('../core/runtime/DataTable').DataTable;
 
   /**
    * Optional doc string attached to step

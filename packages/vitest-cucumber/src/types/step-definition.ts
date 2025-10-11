@@ -1,7 +1,7 @@
 /**
  * Type of Gherkin step
  */
-export type StepType = "Given" | "When" | "Then" | "And" | "But";
+export type StepType = 'Given' | 'When' | 'Then' | 'And' | 'But';
 
 /**
  * Function that implements a step

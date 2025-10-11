@@ -2,7 +2,7 @@
  * Test helpers for step definitions
  * Provides Vitest-compatible assertion API using Node.js assert
  */
-import assert from "node:assert/strict";
+import assert from 'node:assert/strict';
 
 /**
  * Create a Vitest-compatible expect API using Node.js assert
@@ -31,7 +31,7 @@ export function expect(actual: any) {
       assert.strictEqual(actual, null);
     },
     toContain(item: any) {
-      if (typeof actual === "string") {
+      if (typeof actual === 'string') {
         assert.ok(
           actual.includes(item),
           `Expected "${actual}" to contain "${item}"`,
@@ -39,7 +39,7 @@ export function expect(actual: any) {
       } else if (Array.isArray(actual)) {
         assert.ok(actual.includes(item), `Expected array to contain ${item}`);
       } else {
-        throw new Error("toContain requires string or array");
+        throw new Error('toContain requires string or array');
       }
     },
     toHaveLength(length: number) {

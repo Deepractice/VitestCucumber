@@ -1,5 +1,5 @@
-import { HookRegistry } from "../core/runtime/HookRegistry";
-import type { HookFunction } from "../core/runtime/HookRegistry";
+import { HookRegistry } from '../core/runtime/HookRegistry';
+import type { HookFunction } from '../core/runtime/HookRegistry';
 
 /**
  * Hooks for test lifecycle
@@ -10,7 +10,7 @@ import type { HookFunction } from "../core/runtime/HookRegistry";
  */
 export function Before(fn: HookFunction): void {
   const registry = HookRegistry.getInstance();
-  registry.register({ type: "Before", fn });
+  registry.register({ type: 'Before', fn });
 }
 
 /**
@@ -18,7 +18,7 @@ export function Before(fn: HookFunction): void {
  */
 export function After(fn: HookFunction): void {
   const registry = HookRegistry.getInstance();
-  registry.register({ type: "After", fn });
+  registry.register({ type: 'After', fn });
 }
 
 /**
@@ -26,7 +26,7 @@ export function After(fn: HookFunction): void {
  */
 export function BeforeAll(fn: HookFunction): void {
   const registry = HookRegistry.getInstance();
-  registry.register({ type: "BeforeAll", fn });
+  registry.register({ type: 'BeforeAll', fn });
 }
 
 /**
@@ -34,5 +34,5 @@ export function BeforeAll(fn: HookFunction): void {
  */
 export function AfterAll(fn: HookFunction): void {
   const registry = HookRegistry.getInstance();
-  registry.register({ type: "AfterAll", fn });
+  registry.register({ type: 'AfterAll', fn });
 }

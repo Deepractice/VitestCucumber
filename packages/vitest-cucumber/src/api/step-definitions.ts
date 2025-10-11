@@ -1,5 +1,5 @@
-import type { StepFunction } from "~/types";
-import { StepRegistry } from "~/core/runtime";
+import type { StepFunction } from '~/types';
+import { StepRegistry } from '~/core/runtime';
 
 /**
  * Register a Given step
@@ -7,7 +7,7 @@ import { StepRegistry } from "~/core/runtime";
 export function Given(pattern: string | RegExp, fn: StepFunction): void {
   const registry = StepRegistry.getInstance();
   registry.register({
-    type: "Given",
+    type: 'Given',
     pattern,
     fn,
   });
@@ -20,7 +20,7 @@ export function Given(pattern: string | RegExp, fn: StepFunction): void {
 export function When(pattern: string | RegExp, fn: StepFunction): void {
   const registry = StepRegistry.getInstance();
   registry.register({
-    type: "When",
+    type: 'When',
     pattern,
     fn,
   });
@@ -32,7 +32,7 @@ export function When(pattern: string | RegExp, fn: StepFunction): void {
 export function Then(pattern: string | RegExp, fn: StepFunction): void {
   const registry = StepRegistry.getInstance();
   registry.register({
-    type: "Then",
+    type: 'Then',
     pattern,
     fn,
   });
@@ -44,7 +44,7 @@ export function Then(pattern: string | RegExp, fn: StepFunction): void {
 export function And(pattern: string | RegExp, fn: StepFunction): void {
   const registry = StepRegistry.getInstance();
   registry.register({
-    type: "And",
+    type: 'And',
     pattern,
     fn,
   });
@@ -56,7 +56,7 @@ export function And(pattern: string | RegExp, fn: StepFunction): void {
 export function But(pattern: string | RegExp, fn: StepFunction): void {
   const registry = StepRegistry.getInstance();
   registry.register({
-    type: "But",
+    type: 'But',
     pattern,
     fn,
   });
