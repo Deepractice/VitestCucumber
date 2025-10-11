@@ -1,36 +1,56 @@
 # @deepracticex/vitest-cucumber
 
-Run Cucumber BDD tests seamlessly within Vitest.
+Runtime API for Cucumber BDD step definitions and hooks.
 
-## Features
+> **Note**: This package provides the runtime API only. You need `@deepracticex/vitest-cucumber-plugin` for the Vitest plugin that transforms `.feature` files.
 
-- 🔥 **Native Vitest Integration** - Feature files run as regular Vitest tests
-- 🥒 **Full Gherkin Support** - All Cucumber features: Scenarios, Scenario Outlines, Backgrounds, Rules, Data Tables, Doc Strings
-- 🎯 **TypeScript First** - Full type safety with parameter type inference
-- ⚡ **Fast** - Leverages Vitest's parallel execution and watch mode
-- 🧪 **Test Context (World)** - Custom context objects with `setWorldConstructor`
-- 🪝 **Hooks** - Before/After, BeforeAll/AfterAll support
-- 🔍 **Auto Discovery** - Automatically finds and loads step definitions
-- 📝 **Parameter Types** - Built-in support for {string}, {int}, {float}, {word}
+## What's This Package?
+
+This is the **runtime library** that provides:
+
+- `Given`, `When`, `Then` - Step definition APIs
+- `Before`, `After`, `BeforeAll`, `AfterAll` - Lifecycle hooks
+- `DataTable` - Rich API for tabular data
+- `setWorldConstructor` - Custom test context
+
+The generated test code (from `.feature` files) imports from this package.
 
 ## Installation
 
 ```bash
-# Using pnpm (recommended)
-pnpm add -D @deepracticex/vitest-cucumber vitest @cucumber/cucumber
+# Install both packages together
+pnpm add -D @deepracticex/vitest-cucumber-plugin @deepracticex/vitest-cucumber vitest
 
-# Using npm
-npm install -D @deepracticex/vitest-cucumber vitest @cucumber/cucumber
+# Or use npm
+npm install -D @deepracticex/vitest-cucumber-plugin @deepracticex/vitest-cucumber vitest
+```
+
+## Package Split Architecture
+
+```
+┌─────────────────────────────────┐
+│  vitest-cucumber-plugin         │  Compile Time
+│  • Transforms .feature files    │
+│  • Generates test code          │
+└────────────┬────────────────────┘
+             │ generates code that imports
+             ▼
+┌─────────────────────────────────┐
+│  vitest-cucumber (this package) │  Runtime
+│  • Given/When/Then APIs         │
+│  • Hooks (Before/After)         │
+│  • StepExecutor, DataTable      │
+└─────────────────────────────────┘
 ```
 
 ## Quick Start
 
-### 1. Configure Vitest
+### 1. Configure Plugin
 
 ```typescript
 // vitest.config.ts
 import { defineConfig } from 'vitest/config';
-import { vitestCucumber } from '@deepracticex/vitest-cucumber';
+import { vitestCucumber } from '@deepracticex/vitest-cucumber-plugin';
 
 export default defineConfig({
   plugins: [vitestCucumber()],
@@ -40,7 +60,7 @@ export default defineConfig({
 });
 ```
 
-### 2. Write a Feature
+### 2. Write Feature
 
 ```gherkin
 # features/calculator.feature
@@ -52,10 +72,10 @@ Feature: Calculator
     Then the result should be 120
 ```
 
-### 3. Define Steps
+### 3. Define Steps (This Package)
 
 ```typescript
-// tests/e2e/steps/calculator.steps.ts
+// tests/steps/calculator.steps.ts
 import { Given, When, Then } from '@deepracticex/vitest-cucumber';
 import { expect } from 'vitest';
 
@@ -79,50 +99,74 @@ Then('the result should be {int}', function (expected: number) {
 pnpm vitest
 ```
 
-## Advanced Usage
+## Core APIs
+
+### Step Definitions
+
+```typescript
+import { Given, When, Then, And, But } from '@deepracticex/vitest-cucumber';
+
+// Parameter types: {int}, {float}, {string}, {word}
+Given('I have {int} items', function (count: number) {
+  this.count = count;
+});
+
+When('I add {int} more', function (more: number) {
+  this.count += more;
+});
+
+Then('I should have {int} items', function (expected: number) {
+  expect(this.count).toBe(expected);
+});
+```
+
+### Hooks
+
+```typescript
+import {
+  Before,
+  After,
+  BeforeAll,
+  AfterAll,
+} from '@deepracticex/vitest-cucumber';
+
+BeforeAll(async function () {
+  // Runs once before all scenarios
+});
+
+Before(async function () {
+  // Runs before each scenario
+});
+
+After(async function () {
+  // Runs after each scenario
+});
+
+AfterAll(async function () {
+  // Runs once after all scenarios
+});
+```
 
 ### Custom World Context
 
-Define your own context object with helper methods:
-
 ```typescript
-// tests/e2e/support/world.ts
 import { setWorldConstructor } from '@deepracticex/vitest-cucumber';
 
-export interface MyWorld {
+interface MyWorld {
   calculator: Calculator;
   result: number;
-  set(key: string, value: any): void;
-  get(key: string): any;
 }
 
 setWorldConstructor(function (): MyWorld {
   return {
     calculator: new Calculator(),
     result: 0,
-    set(key, val) {
-      this[key] = val;
-    },
-    get(key) {
-      return this[key];
-    },
   };
 });
-```
 
-Then use it in hooks:
-
-```typescript
-// tests/e2e/support/hooks.ts
-import { Before, After } from '@deepracticex/vitest-cucumber';
-import type { MyWorld } from './world';
-
-Before(async function (this: MyWorld) {
-  this.calculator.reset();
-});
-
-After(async function (this: MyWorld) {
-  // Cleanup
+// Use in steps
+Given('...', function (this: MyWorld) {
+  this.calculator.add(5);
 });
 ```
 
@@ -130,7 +174,7 @@ After(async function (this: MyWorld) {
 
 ```gherkin
 Scenario: Multiple users
-  Given the following users exist:
+  Given the following users:
     | name  | email          | role  |
     | Alice | alice@test.com | admin |
     | Bob   | bob@test.com   | user  |
@@ -139,11 +183,15 @@ Scenario: Multiple users
 ```typescript
 import { Given, DataTable } from '@deepracticex/vitest-cucumber';
 
-Given('the following users exist:', function (table: DataTable) {
-  const users = table.hashes(); // Array of objects
+Given('the following users:', function (table: DataTable) {
+  // Get as array of objects
+  const users = table.hashes();
   users.forEach((user) => {
-    createUser(user.name, user.email, user.role);
+    console.log(user.name, user.email, user.role);
   });
+
+  // Or raw 2D array
+  const rows = table.raw();
 });
 ```
 
@@ -152,7 +200,7 @@ Given('the following users exist:', function (table: DataTable) {
 ```gherkin
 Scenario: Process JSON
   Given I have the following JSON:
-    """
+    """json
     {
       "name": "Test",
       "value": 42
@@ -161,39 +209,42 @@ Scenario: Process JSON
 ```
 
 ```typescript
-import { Given } from '@deepracticex/vitest-cucumber';
-
 Given('I have the following JSON:', function (docString: string) {
   this.data = JSON.parse(docString);
 });
 ```
 
-### Configuration Options
+## For Package Authors
+
+If you're building a testing utilities wrapper:
 
 ```typescript
+// your-package/cucumber.ts
+export * from '@deepracticex/vitest-cucumber';
+
+// Export runtime for generated code
+export * from '@deepracticex/vitest-cucumber/runtime';
+```
+
+Then configure the plugin to use your package:
+
+```typescript
+// vitest.config.ts
 vitestCucumber({
-  features: ['features/**/*.feature'], // Feature file patterns
-  steps: 'tests/e2e/steps', // Step definitions directory
-  verbose: true, // Enable detailed logging
+  runtimeModule: '@your-company/testing-utils',
 });
 ```
 
-## Plugin Architecture
+Generated code will import from your package instead:
 
-This plugin works by transforming `.feature` files into Vitest test files at build time:
-
+```typescript
+import { StepExecutor, ... } from '@your-company/testing-utils/runtime';
 ```
-.feature file → Feature Parser → Code Generator → Vitest test
-```
-
-Each scenario becomes a Vitest `test()`, and steps are executed through the StepRegistry.
 
 ## Requirements
 
 - Node.js >= 18
 - Vitest >= 2.0
-- @cucumber/cucumber >= 11.0
-- tsx (for TypeScript step definitions)
 
 ## License
 

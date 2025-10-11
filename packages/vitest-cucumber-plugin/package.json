@@ -1,7 +1,7 @@
 {
-  "name": "@deepracticex/vitest-cucumber",
+  "name": "@deepracticex/vitest-cucumber-plugin",
   "version": "0.1.0",
-  "description": "Runtime API for Cucumber BDD step definitions and hooks",
+  "description": "Vitest plugin for transforming Cucumber feature files to test code",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -11,11 +11,6 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    },
-    "./runtime": {
-      "types": "./dist/runtime.d.ts",
-      "import": "./dist/runtime.js",
-      "require": "./dist/runtime.cjs"
     }
   },
   "scripts": {
@@ -36,26 +31,29 @@
   "keywords": [
     "cucumber",
     "vitest",
+    "vite",
+    "plugin",
     "bdd",
     "testing",
-    "integration",
     "gherkin",
-    "deepractice",
-    "nodespec"
+    "deepractice"
   ],
   "author": "Deepractice",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Deepractice/EnhancedVitest",
-    "directory": "packages/vitest-cucumber"
+    "directory": "packages/vitest-cucumber-plugin"
   },
   "peerDependencies": {
     "vitest": "^2.0.0 || ^3.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@cucumber/gherkin": "^30.0.3",
+    "@cucumber/messages": "^26.0.0",
+    "glob": "^11.0.0"
+  },
   "devDependencies": {
-    "@cucumber/cucumber": "^11.3.0",
     "@types/node": "^22.0.0",
     "tsup": "^8.5.0",
     "typescript": "^5.7.3",
