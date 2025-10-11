@@ -1,10 +1,16 @@
-# EnhancedVitest
+<div align="center">
+  <h1>EnhancedVitest</h1>
+  <p><strong>The official Vitest enhancement suite for Deepractice projects.</strong></p>
 
-[![GitHub stars](https://img.shields.io/github/stars/Deepractice/EnhancedVitest?style=social)](https://github.com/Deepractice/EnhancedVitest)
-[![GitHub watchers](https://img.shields.io/github/watchers/Deepractice/EnhancedVitest?style=social)](https://github.com/Deepractice/EnhancedVitest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  <!-- Badges -->
+  <p>
+    <a href="https://github.com/Deepractice/EnhancedVitest"><img src="https://img.shields.io/github/stars/Deepractice/EnhancedVitest?style=social" alt="Stars"/></a>
+    <img src="https://komarev.com/ghpvc/?username=EnhancedVitest&label=views&color=0e75b6&style=flat&abbreviated=true" alt="Views"/>
+    <a href="LICENSE"><img src="https://img.shields.io/github/license/Deepractice/EnhancedVitest?color=blue" alt="License"/></a>
+  </p>
+</div>
 
-**The official Vitest enhancement suite for Deepractice projects.**
+---
 
 This monorepo contains all Vitest enhancements and extensions developed by Deepractice. As we continue to build and refine our testing infrastructure, all Vitest-related improvements will be developed and maintained here.
 
