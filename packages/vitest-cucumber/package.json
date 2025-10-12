@@ -1,6 +1,6 @@
 {
   "name": "@deepracticex/vitest-cucumber",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Runtime API for Cucumber BDD step definitions and hooks",
   "type": "module",
   "main": "./dist/index.js",
