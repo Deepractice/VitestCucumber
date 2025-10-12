@@ -1,8 +1,13 @@
 # @deepracticex/vitest-cucumber-plugin
 
-Vitest plugin for transforming Cucumber feature files to test code.
+**Vitest plugin that brings Cucumber BDD to your tests** - Write `.feature` files, get native Vitest tests.
 
-> **Note**: This package provides the Vitest plugin only. You also need `@deepracticex/vitest-cucumber` for the runtime API (Given/When/Then).
+🥒 **Real Gherkin** - Standard `.feature` files parsed with `@cucumber/gherkin`
+⚡ **Build-time transformation** - Zero runtime overhead
+🎯 **Auto-discovery** - Automatically finds step definitions
+🔧 **Vitest native** - Full ecosystem compatibility (UI, watch, coverage)
+
+> **Note**: This is the **plugin** package. You also need `@deepracticex/vitest-cucumber` for step definitions (Given/When/Then/Before/After).
 
 ## Features
 
@@ -22,9 +27,16 @@ pnpm add -D @deepracticex/vitest-cucumber-plugin @deepracticex/vitest-cucumber v
 npm install -D @deepracticex/vitest-cucumber-plugin @deepracticex/vitest-cucumber vitest
 ```
 
-## Usage
+## Quick Start
 
-### Basic Setup
+### 1. Install
+
+```bash
+# Install both packages together
+pnpm add -D @deepracticex/vitest-cucumber-plugin @deepracticex/vitest-cucumber vitest
+```
+
+### 2. Configure Vitest
 
 ```typescript
 // vitest.config.ts
@@ -34,14 +46,149 @@ import { vitestCucumber } from '@deepracticex/vitest-cucumber-plugin';
 export default defineConfig({
   plugins: [
     vitestCucumber({
-      steps: 'tests/steps',
+      features: ['features/**/*.feature'], // Where your .feature files are
+      steps: ['tests/steps/**/*.ts'], // Where your step definitions are
     }),
   ],
   test: {
-    include: ['**/*.feature'],
+    include: ['**/*.feature'], // Tell Vitest to run .feature files
   },
 });
 ```
+
+### 3. Write a Feature
+
+```gherkin
+# features/login.feature
+Feature: User Login
+  As a user
+  I want to log in to the application
+  So that I can access my account
+
+  Background:
+    Given the application is running
+    And the database is seeded
+
+  Scenario: Successful login
+    Given I am on the login page
+    When I enter username "john@example.com"
+    And I enter password "secret123"
+    And I click the login button
+    Then I should see the dashboard
+    And I should see "Welcome, John"
+
+  Scenario: Failed login
+    Given I am on the login page
+    When I enter username "wrong@example.com"
+    And I enter password "wrongpass"
+    And I click the login button
+    Then I should see an error "Invalid credentials"
+    And I should remain on the login page
+```
+
+### 4. Define Steps
+
+```typescript
+// tests/steps/login.steps.ts
+import {
+  Given,
+  When,
+  Then,
+  Before,
+  setWorldConstructor,
+} from '@deepracticex/vitest-cucumber';
+import { expect } from 'vitest';
+
+// Define your test context
+interface LoginWorld {
+  page: Page;
+  user: User | null;
+  error: string | null;
+}
+
+setWorldConstructor(function (): LoginWorld {
+  return {
+    page: new Page(),
+    user: null,
+    error: null,
+  };
+});
+
+// Before hook runs before Background
+Before(function (this: LoginWorld) {
+  this.user = null;
+  this.error = null;
+});
+
+// Background steps
+Given('the application is running', async function (this: LoginWorld) {
+  await this.page.navigate('/');
+});
+
+Given('the database is seeded', async function (this: LoginWorld) {
+  await seedDatabase();
+});
+
+// Scenario steps
+Given('I am on the login page', async function (this: LoginWorld) {
+  await this.page.navigate('/login');
+});
+
+When(
+  'I enter username {string}',
+  async function (this: LoginWorld, username: string) {
+    await this.page.fill('#username', username);
+  },
+);
+
+When(
+  'I enter password {string}',
+  async function (this: LoginWorld, password: string) {
+    await this.page.fill('#password', password);
+  },
+);
+
+When('I click the login button', async function (this: LoginWorld) {
+  await this.page.click('#login-btn');
+});
+
+Then('I should see the dashboard', async function (this: LoginWorld) {
+  expect(await this.page.url()).toBe('/dashboard');
+});
+
+Then('I should see {string}', async function (this: LoginWorld, text: string) {
+  expect(await this.page.textContent('body')).toContain(text);
+});
+
+Then(
+  'I should see an error {string}',
+  async function (this: LoginWorld, error: string) {
+    expect(await this.page.textContent('.error')).toBe(error);
+  },
+);
+
+Then('I should remain on the login page', async function (this: LoginWorld) {
+  expect(await this.page.url()).toBe('/login');
+});
+```
+
+### 5. Run Tests
+
+```bash
+# Run all feature tests
+pnpm vitest
+
+# Run specific feature
+pnpm vitest features/login.feature
+
+# Watch mode
+pnpm vitest --watch
+
+# With UI
+pnpm vitest --ui
+```
+
+That's it! 🎉 You now have Cucumber BDD working in Vitest.
 
 ### Advanced: Custom Runtime Module
 
@@ -61,13 +208,54 @@ Generated code will import from your custom module:
 import { StepExecutor, ... } from '@my-company/testing-utils/runtime';
 ```
 
-## Options
+## Configuration Options
 
-| Option          | Type      | Default                           | Description                                |
-| --------------- | --------- | --------------------------------- | ------------------------------------------ |
-| `steps`         | `string`  | `'tests/steps'`                   | Directory containing step definition files |
-| `runtimeModule` | `string`  | `'@deepracticex/vitest-cucumber'` | Module path for runtime imports            |
-| `verbose`       | `boolean` | `false`                           | Enable verbose logging                     |
+```typescript
+vitestCucumber({
+  features?: string | string[],  // Feature file patterns (optional, defaults to auto-discovery)
+  steps?: string | string[],     // Step definition patterns (optional, defaults to 'tests/steps')
+  runtimeModule?: string,        // Custom runtime module (for wrapper packages)
+  verbose?: boolean,             // Enable verbose logging (default: false)
+})
+```
+
+### Options Details
+
+| Option          | Type                 | Default                           | Description                                                             |
+| --------------- | -------------------- | --------------------------------- | ----------------------------------------------------------------------- |
+| `features`      | `string \| string[]` | Auto-discovery                    | Glob patterns for `.feature` files (e.g., `'features/**/*.feature'`)    |
+| `steps`         | `string \| string[]` | `'tests/steps'`                   | Glob patterns for step definition files (e.g., `'tests/**/*.steps.ts'`) |
+| `runtimeModule` | `string`             | `'@deepracticex/vitest-cucumber'` | Module path for runtime imports (for creating wrapper packages)         |
+| `verbose`       | `boolean`            | `false`                           | Log transformation details (useful for debugging)                       |
+
+### Examples
+
+**Minimal configuration:**
+
+```typescript
+plugins: [vitestCucumber()]; // Uses all defaults
+```
+
+**Custom paths:**
+
+```typescript
+plugins: [
+  vitestCucumber({
+    features: ['e2e/**/*.feature', 'integration/**/*.feature'],
+    steps: ['e2e/steps/**/*.ts', 'integration/steps/**/*.ts'],
+  }),
+];
+```
+
+**Debug mode:**
+
+```typescript
+plugins: [
+  vitestCucumber({
+    verbose: true, // See what the plugin is doing
+  }),
+];
+```
 
 ## How It Works
 
