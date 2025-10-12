@@ -104,13 +104,6 @@ export class CodeGenerator {
     lines.push(`${ind}  const executor = new StepExecutor(cucumberContext);`);
     lines.push('');
 
-    // Execute Before hooks
-    lines.push(`${ind}  // Execute Before hooks`);
-    lines.push(
-      `${ind}  await hookRegistry.executeHooks('Before', cucumberContext);`,
-    );
-    lines.push('');
-
     // Generate steps
     lines.push(`${ind}  // Execute steps`);
     for (const step of scenario.steps) {
@@ -187,13 +180,25 @@ export class CodeGenerator {
 
     lines.push('');
     lines.push(`${ind}beforeEach(async (context) => {`);
+    lines.push(`${ind}  const hookRegistry = HookRegistry.getInstance();`);
     lines.push(
       `${ind}  // Create shared ContextManager for Background and Scenario`,
     );
     lines.push(`${ind}  context.contextManager = new ContextManager();`);
     lines.push(
-      `${ind}  const executor = new StepExecutor(context.contextManager.getContext());`,
+      `${ind}  const cucumberContext = context.contextManager.getContext();`,
     );
+    lines.push('');
+
+    // Execute Before hooks BEFORE Background steps (Cucumber standard)
+    lines.push(`${ind}  // Execute Before hooks (must run before Background)`);
+    lines.push(
+      `${ind}  await hookRegistry.executeHooks('Before', cucumberContext);`,
+    );
+    lines.push('');
+
+    // Now execute Background steps
+    lines.push(`${ind}  const executor = new StepExecutor(cucumberContext);`);
     lines.push('');
 
     // Generate background steps
@@ -283,13 +288,6 @@ export class CodeGenerator {
         );
         lines.push(
           `${ind}    const executor = new StepExecutor(cucumberContext);`,
-        );
-        lines.push('');
-
-        // Execute Before hooks
-        lines.push(`${ind}    // Execute Before hooks`);
-        lines.push(
-          `${ind}    await hookRegistry.executeHooks('Before', cucumberContext);`,
         );
         lines.push('');
 
