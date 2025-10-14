@@ -11,7 +11,6 @@ export function Given(pattern: string | RegExp, fn: StepFunction): void {
     pattern,
     fn,
   });
-  console.log(`[Given] Registered: ${pattern}`);
 }
 
 /**

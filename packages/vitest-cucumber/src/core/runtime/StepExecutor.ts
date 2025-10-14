@@ -22,11 +22,6 @@ export class StepExecutor {
     const match = this.registry.findMatch(keyword, step.text);
 
     if (!match) {
-      const allSteps = this.registry.getAll();
-      console.error(`[StepExecutor] Registered steps (${allSteps.length}):`);
-      allSteps.forEach((s) => {
-        console.error(`  - ${s.type}: ${s.pattern}`);
-      });
       throw new Error(
         `No step definition found for: ${step.keyword} ${step.text}`,
       );

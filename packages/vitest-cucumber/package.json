@@ -16,6 +16,11 @@
       "types": "./dist/runtime.d.ts",
       "import": "./dist/runtime.js",
       "require": "./dist/runtime.cjs"
+    },
+    "./plugin": {
+      "types": "./dist/plugin.d.ts",
+      "import": "./dist/plugin.js",
+      "require": "./dist/plugin.cjs"
     }
   },
   "scripts": {
@@ -52,6 +57,9 @@
   },
   "peerDependencies": {
     "vitest": "^2.0.0 || ^3.0.0"
+  },
+  "dependencies": {
+    "@deepracticex/vitest-cucumber-plugin": "workspace:*"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^11.3.0",

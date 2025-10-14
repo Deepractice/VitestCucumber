@@ -25,34 +25,10 @@ EnhancedVitest serves as the central hub for Deepractice's Vitest ecosystem:
 
 ## Packages
 
-### [@deepracticex/vitest-cucumber](./packages/vitest-cucumber) [![npm version](https://img.shields.io/npm/v/@deepracticex/vitest-cucumber)](https://www.npmjs.com/package/@deepracticex/vitest-cucumber)
-
-Cucumber BDD integration for Vitest. Write behavior-driven tests using Gherkin syntax while leveraging Vitest's speed and developer experience.
-
-**Status**: ✅ Stable
-**Use Cases**: BDD testing, E2E scenarios, acceptance testing
-
-### [@deepracticex/vitest-cucumber-plugin](./packages/vitest-cucumber-plugin) [![npm version](https://img.shields.io/npm/v/@deepracticex/vitest-cucumber-plugin)](https://www.npmjs.com/package/@deepracticex/vitest-cucumber-plugin)
-
-Vitest plugin for transforming Cucumber feature files to test code.
-
-**Status**: ✅ Stable
-**Use Cases**: Feature file transformation, Vitest integration
-
-## For Wrapper Package Authors
-
-If you're building a wrapper package around vitest-cucumber, you can use the `runtimeModule` option to eliminate the need for users to directly depend on `@deepracticex/vitest-cucumber`.
-
-**Quick example:**
-
-```typescript
-// Your wrapper's vitest config
-vitestCucumber({
-  runtimeModule: '@your-org/testing-utils',
-});
-```
-
-Then re-export the runtime APIs in your package, and users only need to install your wrapper! See the [vitest-cucumber-plugin README](./packages/vitest-cucumber-plugin#creating-wrapper-packages) for a complete guide.
+| Package                                  | Version                                                                                                                                         | Description                                                                              | Links                                       |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------- |
+| **@deepracticex/vitest-cucumber**        | [![npm](https://img.shields.io/npm/v/@deepracticex/vitest-cucumber)](https://www.npmjs.com/package/@deepracticex/vitest-cucumber)               | Cucumber BDD integration for Vitest. Main package with runtime APIs and plugin.          | [README](./packages/vitest-cucumber)        |
+| **@deepracticex/vitest-cucumber-plugin** | [![npm](https://img.shields.io/npm/v/@deepracticex/vitest-cucumber-plugin)](https://www.npmjs.com/package/@deepracticex/vitest-cucumber-plugin) | Internal plugin for transforming `.feature` files. Users don't need to install directly. | [README](./packages/vitest-cucumber-plugin) |
 
 ## Roadmap
 

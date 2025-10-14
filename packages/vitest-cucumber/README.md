@@ -23,29 +23,25 @@ The generated test code (from `.feature` files) imports from this package.
 ## Installation
 
 ```bash
-# Install both packages together
-pnpm add -D @deepracticex/vitest-cucumber-plugin @deepracticex/vitest-cucumber vitest
+# Install the package
+pnpm add -D @deepracticex/vitest-cucumber vitest
 
 # Or use npm
-npm install -D @deepracticex/vitest-cucumber-plugin @deepracticex/vitest-cucumber vitest
+npm install -D @deepracticex/vitest-cucumber vitest
 ```
 
-## Package Split Architecture
+## Architecture
 
 ```
-┌─────────────────────────────────┐
-│  vitest-cucumber-plugin         │  Compile Time
-│  • Transforms .feature files    │
-│  • Generates test code          │
-└────────────┬────────────────────┘
-             │ generates code that imports
-             ▼
-┌─────────────────────────────────┐
-│  vitest-cucumber (this package) │  Runtime
-│  • Given/When/Then APIs         │
-│  • Hooks (Before/After)         │
-│  • StepExecutor, DataTable      │
-└─────────────────────────────────┘
+┌─────────────────────────────────────┐
+│  @deepracticex/vitest-cucumber      │
+│                                     │
+│  • Given/When/Then (main export)    │
+│  • vitestCucumber (/plugin)         │
+│  • Runtime APIs (/runtime)          │
+└─────────────────────────────────────┘
+
+One package, everything included.
 ```
 
 ## Quick Start
@@ -55,7 +51,7 @@ npm install -D @deepracticex/vitest-cucumber-plugin @deepracticex/vitest-cucumbe
 ```typescript
 // vitest.config.ts
 import { defineConfig } from 'vitest/config';
-import { vitestCucumber } from '@deepracticex/vitest-cucumber-plugin';
+import { vitestCucumber } from '@deepracticex/vitest-cucumber/plugin';
 
 export default defineConfig({
   plugins: [vitestCucumber()],
