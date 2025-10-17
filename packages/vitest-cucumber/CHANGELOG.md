@@ -1,5 +1,16 @@
 # @deepracticex/vitest-cucumber
 
+## 1.2.1
+
+### Patch Changes
+
+- c2c185a: fix: clean up global registries to prevent worker process hanging
+
+  Vitest worker processes now properly exit after tests complete by clearing global registries (StepRegistry, HookRegistry) in the generated afterAll hook. This prevents orphaned processes that consume excessive memory and can lead to infinite GC loops.
+
+- Updated dependencies [c2c185a]
+  - @deepracticex/vitest-cucumber-plugin@1.2.1
+
 ## 1.2.0
 
 ### Minor Changes
