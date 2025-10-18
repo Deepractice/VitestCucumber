@@ -1,8 +1,13 @@
 /**
  * Core runtime components
  */
-export { StepRegistry } from './StepRegistry';
-export type { ExtendedStepDefinition } from './StepRegistry';
+export {
+  StepRegistry,
+  __setCurrentFeatureContext__,
+  __getCurrentFeatureContext__,
+  __resetWarningFlag__,
+} from './StepRegistry';
+export type { ExtendedStepDefinition, FeatureContext } from './StepRegistry';
 export { StepExecutor } from './StepExecutor';
 export { ContextManager } from './ContextManager';
 export { DataTable } from './DataTable';

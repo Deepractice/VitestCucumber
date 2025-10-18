@@ -1,4 +1,5 @@
 import type { StepContext } from '~/types';
+import { __getCurrentFeatureContext__ } from './StepRegistry';
 
 /**
  * Hook function type
@@ -13,13 +14,13 @@ export interface HookDefinition {
   fn: HookFunction;
 }
 
-// Use globalThis to ensure single instance across module boundaries
+// Global type augmentation
 declare global {
   var __VITEST_CUCUMBER_HOOK_REGISTRY__: HookRegistry | undefined;
 }
 
 /**
- * Global registry for Cucumber hooks
+ * Global registry for Cucumber hooks with feature-scoped isolation support
  */
 export class HookRegistry {
   private hooks: HookDefinition[] = [];
@@ -27,13 +28,27 @@ export class HookRegistry {
   private constructor() {}
 
   /**
-   * Get the singleton instance (globally shared across all modules)
+   * Get the singleton instance (with feature context support)
    */
   public static getInstance(): HookRegistry {
+    // Priority 1: Use feature context if available (modern mode)
+    const featureContext = __getCurrentFeatureContext__();
+    if (featureContext) {
+      return featureContext.hookRegistry;
+    }
+
+    // Priority 2: Fall back to global singleton (legacy mode)
     if (!globalThis.__VITEST_CUCUMBER_HOOK_REGISTRY__) {
       globalThis.__VITEST_CUCUMBER_HOOK_REGISTRY__ = new HookRegistry();
     }
     return globalThis.__VITEST_CUCUMBER_HOOK_REGISTRY__;
+  }
+
+  /**
+   * Create a new feature-scoped registry (called by CodeGenerator)
+   */
+  public static createFeatureScoped(): HookRegistry {
+    return new HookRegistry();
   }
 
   /**

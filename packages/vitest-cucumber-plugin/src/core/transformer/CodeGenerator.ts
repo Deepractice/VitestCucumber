@@ -25,14 +25,32 @@ export class CodeGenerator {
       "import { describe, it, beforeEach, afterEach, beforeAll, afterAll } from 'vitest';",
     );
     lines.push(
-      `import { StepExecutor, ContextManager, DataTable, HookRegistry, StepRegistry } from '${this.runtimeModule}/runtime';`,
+      `import { StepExecutor, ContextManager, DataTable, HookRegistry, StepRegistry, __setCurrentFeatureContext__ } from '${this.runtimeModule}/runtime';`,
     );
     lines.push('');
 
+    // Create feature-scoped registries BEFORE importing step files
+    lines.push('// Create feature-scoped registries for test isolation');
+    lines.push(
+      'const __featureStepRegistry__ = StepRegistry.createFeatureScoped();',
+    );
+    lines.push(
+      'const __featureHookRegistry__ = HookRegistry.createFeatureScoped();',
+    );
+    lines.push('');
+    lines.push('// Set feature context for step definition loading');
+    lines.push('__setCurrentFeatureContext__({');
+    lines.push('  stepRegistry: __featureStepRegistry__,');
+    lines.push('  hookRegistry: __featureHookRegistry__,');
+    lines.push('});');
+    lines.push('');
+
     // Import step definitions and hooks
-    // This ensures step definitions are registered before tests run
+    // These will be registered to the feature-scoped registries
     if (stepFiles.length > 0) {
-      lines.push('// Step definitions and hooks');
+      lines.push(
+        '// Step definitions and hooks (registered to feature-scoped registries)',
+      );
       for (const stepFile of stepFiles) {
         // Use absolute path from project root
         const importPath = `/${stepFile.replace(/\\/g, '/').replace(/\.ts$/, '')}`;
@@ -41,31 +59,34 @@ export class CodeGenerator {
       lines.push('');
     }
 
+    // Clear feature context after loading
+    lines.push('// Clear context after step definition loading');
+    lines.push('__setCurrentFeatureContext__(null);');
+    lines.push('');
+
     // Feature describe block
     lines.push(`describe('${this.escapeString(feature.name)}', () => {`);
 
-    // Generate BeforeAll/AfterAll hooks
+    // Generate BeforeAll/AfterAll hooks (use feature-scoped registries)
     lines.push('');
     lines.push('  beforeAll(async () => {');
-    lines.push('    const hookRegistry = HookRegistry.getInstance();');
     lines.push('    const contextManager = new ContextManager();');
     lines.push(
-      "    await hookRegistry.executeHooks('BeforeAll', contextManager.getContext());",
+      "    await __featureHookRegistry__.executeHooks('BeforeAll', contextManager.getContext());",
     );
     lines.push('  });');
     lines.push('');
     lines.push('  afterAll(async () => {');
-    lines.push('    const hookRegistry = HookRegistry.getInstance();');
     lines.push('    const contextManager = new ContextManager();');
     lines.push(
-      "    await hookRegistry.executeHooks('AfterAll', contextManager.getContext());",
+      "    await __featureHookRegistry__.executeHooks('AfterAll', contextManager.getContext());",
     );
     lines.push('');
     lines.push(
-      '    // Clean up global registries to prevent memory leaks and allow worker process to exit',
+      '    // Clean up feature-scoped registries to prevent memory leaks and allow worker process to exit',
     );
-    lines.push('    hookRegistry.clear();');
-    lines.push('    StepRegistry.getInstance().clear();');
+    lines.push('    __featureHookRegistry__.clear();');
+    lines.push('    __featureStepRegistry__.clear();');
     lines.push('  });');
 
     // Generate feature-level background
@@ -105,7 +126,6 @@ export class CodeGenerator {
     lines.push(
       `${ind}it('${this.escapeString(scenario.name)}', async (context) => {`,
     );
-    lines.push(`${ind}  const hookRegistry = HookRegistry.getInstance();`);
     lines.push(`${ind}  // Reuse ContextManager from Background if available`);
     lines.push(
       `${ind}  const contextManager = context.contextManager || new ContextManager();`,
@@ -118,7 +138,7 @@ export class CodeGenerator {
     if (!this.hasBackground) {
       lines.push(`${ind}  // Execute Before hooks`);
       lines.push(
-        `${ind}  await hookRegistry.executeHooks('Before', cucumberContext);`,
+        `${ind}  await __featureHookRegistry__.executeHooks('Before', cucumberContext);`,
       );
       lines.push('');
     }
@@ -132,7 +152,7 @@ export class CodeGenerator {
     // Execute After hooks
     lines.push(`${ind}  // Execute After hooks`);
     lines.push(
-      `${ind}  await hookRegistry.executeHooks('After', cucumberContext);`,
+      `${ind}  await __featureHookRegistry__.executeHooks('After', cucumberContext);`,
     );
 
     lines.push(`${ind}});`);
@@ -199,7 +219,6 @@ export class CodeGenerator {
 
     lines.push('');
     lines.push(`${ind}beforeEach(async (context) => {`);
-    lines.push(`${ind}  const hookRegistry = HookRegistry.getInstance();`);
     lines.push(
       `${ind}  // Create shared ContextManager for Background and Scenario`,
     );
@@ -212,7 +231,7 @@ export class CodeGenerator {
     // Execute Before hooks BEFORE Background steps (Cucumber standard)
     lines.push(`${ind}  // Execute Before hooks (must run before Background)`);
     lines.push(
-      `${ind}  await hookRegistry.executeHooks('Before', cucumberContext);`,
+      `${ind}  await __featureHookRegistry__.executeHooks('Before', cucumberContext);`,
     );
     lines.push('');
 
@@ -294,9 +313,6 @@ export class CodeGenerator {
           `${ind}  it('Example: ${this.escapeString(exampleDesc)}', async (context) => {`,
         );
         lines.push(
-          `${ind}    const hookRegistry = HookRegistry.getInstance();`,
-        );
-        lines.push(
           `${ind}    // Reuse ContextManager from Background if available`,
         );
         lines.push(
@@ -314,7 +330,7 @@ export class CodeGenerator {
         if (!this.hasBackground) {
           lines.push(`${ind}    // Execute Before hooks`);
           lines.push(
-            `${ind}    await hookRegistry.executeHooks('Before', cucumberContext);`,
+            `${ind}    await __featureHookRegistry__.executeHooks('Before', cucumberContext);`,
           );
           lines.push('');
         }
@@ -332,7 +348,7 @@ export class CodeGenerator {
         // Execute After hooks
         lines.push(`${ind}    // Execute After hooks`);
         lines.push(
-          `${ind}    await hookRegistry.executeHooks('After', cucumberContext);`,
+          `${ind}    await __featureHookRegistry__.executeHooks('After', cucumberContext);`,
         );
 
         lines.push(`${ind}  });`);

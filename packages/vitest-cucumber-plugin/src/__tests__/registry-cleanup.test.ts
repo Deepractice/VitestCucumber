@@ -23,8 +23,8 @@ describe('Registry Cleanup', () => {
       expect(code).toContain('afterAll(async () => {');
 
       // Verify registry cleanup is present
-      expect(code).toContain('StepRegistry.getInstance().clear()');
-      expect(code).toContain('hookRegistry.clear()');
+      expect(code).toContain('__featureStepRegistry__.clear()');
+      expect(code).toContain('__featureHookRegistry__.clear()');
     });
 
     it('should clean up registries after feature with background', () => {
@@ -47,8 +47,8 @@ describe('Registry Cleanup', () => {
 
       // Verify afterAll exists and contains cleanup
       expect(code).toContain('afterAll(async () => {');
-      expect(code).toContain('StepRegistry.getInstance().clear()');
-      expect(code).toContain('hookRegistry.clear()');
+      expect(code).toContain('__featureStepRegistry__.clear()');
+      expect(code).toContain('__featureHookRegistry__.clear()');
     });
 
     it('should clean up registries in correct order (user hooks before registry clear)', () => {
@@ -78,10 +78,10 @@ describe('Registry Cleanup', () => {
         // Find positions
         const userHookIndex = afterAllBlock.indexOf("executeHooks('AfterAll'");
         const stepRegistryClearIndex = afterAllBlock.indexOf(
-          'StepRegistry.getInstance().clear()',
+          '__featureStepRegistry__.clear()',
         );
         const hookRegistryClearIndex = afterAllBlock.indexOf(
-          'hookRegistry.clear()',
+          '__featureHookRegistry__.clear()',
         );
 
         // Verify all exist

@@ -25,7 +25,7 @@ describe('CodeGenerator', () => {
       // Verify Before hooks are executed in beforeEach
       expect(code).toContain('beforeEach(async (context) => {');
       expect(code).toContain(
-        "await hookRegistry.executeHooks('Before', cucumberContext);",
+        "await __featureHookRegistry__.executeHooks('Before', cucumberContext);",
       );
 
       // Verify Before hooks come BEFORE Background step execution
@@ -150,7 +150,7 @@ describe('CodeGenerator', () => {
       // Before hooks should be in beforeEach only
       expect(code).toContain('beforeEach(async (context) => {');
       expect(code).toContain(
-        "await hookRegistry.executeHooks('Before', cucumberContext);",
+        "await __featureHookRegistry__.executeHooks('Before', cucumberContext);",
       );
 
       // Scenario outline it() blocks should NOT have Before hooks
