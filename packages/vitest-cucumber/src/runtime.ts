@@ -9,4 +9,13 @@ export { StepExecutor } from '~/core/runtime/StepExecutor';
 export { ContextManager } from '~/core/runtime/ContextManager';
 export { DataTable } from '~/core/runtime/DataTable';
 export { HookRegistry } from '~/core/runtime/HookRegistry';
-export { StepRegistry } from '~/core/runtime/StepRegistry';
+export {
+  StepRegistry,
+  __setCurrentFeatureContext__,
+  __getCurrentFeatureContext__,
+  __resetWarningFlag__,
+} from '~/core/runtime/StepRegistry';
+export type {
+  ExtendedStepDefinition,
+  FeatureContext,
+} from '~/core/runtime/StepRegistry';
