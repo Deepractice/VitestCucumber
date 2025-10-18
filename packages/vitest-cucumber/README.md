@@ -54,7 +54,13 @@ import { defineConfig } from 'vitest/config';
 import { vitestCucumber } from '@deepracticex/vitest-cucumber/plugin';
 
 export default defineConfig({
-  plugins: [vitestCucumber()],
+  plugins: [
+    vitestCucumber({
+      // Optional: customize paths (defaults shown)
+      features: ['features/**/*.feature'],
+      steps: 'tests/steps',
+    }),
+  ],
   test: {
     include: ['**/*.feature'],
   },
@@ -183,6 +189,111 @@ Given('...', function (this: MyWorld) {
 });
 ```
 
+## Project Structure
+
+### Recommended Structure (Cucumber.js Compatible)
+
+```
+project/
+├── features/              # Feature files
+│   ├── auth.feature
+│   └── user.feature
+└── tests/
+    └── e2e/
+        ├── support/       # Loaded FIRST (hooks, world, custom types)
+        │   ├── hooks.ts
+        │   └── world.ts
+        └── steps/         # Loaded SECOND (step definitions)
+            ├── auth.steps.ts
+            └── user.steps.ts
+```
+
+**Configuration:**
+
+```typescript
+vitestCucumber({
+  features: ['features/**/*.feature'],
+  steps: 'tests/e2e/steps',
+});
+```
+
+### Support Directory Auto-Loading
+
+Files in `support/` directories are **automatically loaded before step definitions**, ensuring hooks and world setup are available when steps execute.
+
+**Loading order:**
+
+1. `tests/e2e/support/**/*.ts` - Hooks, world, custom parameter types
+2. `tests/e2e/steps/**/*.ts` - Step definitions
+
+**Example support/hooks.ts:**
+
+```typescript
+import { Before, After } from '@deepracticex/vitest-cucumber';
+
+Before(function () {
+  // Initialize context before each scenario
+  this.services = createTestServices();
+});
+
+After(function () {
+  // Clean up after each scenario
+  this.services?.cleanup();
+});
+```
+
+**Example support/world.ts:**
+
+```typescript
+import { setWorldConstructor } from '@deepracticex/vitest-cucumber';
+
+setWorldConstructor(function () {
+  return {
+    services: null,
+    userData: {},
+    // Custom methods
+    async login(username: string) {
+      // ...
+    },
+  };
+});
+```
+
+### Alternative Structures
+
+**Features co-located with source:**
+
+```
+src/
+├── auth/
+│   ├── auth.feature
+│   └── auth.steps.ts
+└── user/
+    ├── user.feature
+    └── user.steps.ts
+```
+
+**Everything in tests:**
+
+```
+tests/
+├── features/
+│   └── *.feature
+├── support/
+│   └── hooks.ts
+└── steps/
+    └── *.steps.ts
+```
+
+**Configuration:**
+
+```typescript
+vitestCucumber({
+  features: ['tests/features/**/*.feature'],
+  steps: 'tests/steps',
+});
+```
+
 ### Data Tables
 
 ```gherkin
@@ -263,6 +374,7 @@ Unlike test wrappers that mimic Gherkin syntax, we provide:
 - **Real `.feature` files** parsed with official `@cucumber/gherkin`
 - **Standard Cucumber APIs** - `Given`, `When`, `Then`, `Before`, `After`
 - **Spec-compliant execution order** - Hooks run exactly as documented in Cucumber spec
+- **Support directory convention** - Automatically loads support files before steps (Cucumber.js compatible)
 - **Familiar patterns** - If you know Cucumber, you already know this
 
 ### ⚡ Vitest Native

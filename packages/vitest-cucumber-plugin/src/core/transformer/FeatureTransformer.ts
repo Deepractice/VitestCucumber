@@ -36,31 +36,53 @@ export class FeatureTransformer {
   }
 
   /**
-   * Discover step definition files
+   * Discover step definition files with support files loaded first
    */
   private discoverStepFiles(): string[] {
-    // Try multiple possible step locations
-    const patterns = [
-      `${this.stepsDir}/**/*.steps.ts`,
-      `${this.stepsDir}/**/*.ts`,
-      `tests/e2e/steps/**/*.ts`,
-      `tests/e2e/support/**/*.ts`,
+    // Phase 1: Discover support files (must load FIRST for hooks and world setup)
+    const supportPatterns = [
+      `${this.stepsDir}/**/support/**/*.ts`,
+      'tests/e2e/support/**/*.ts', // Fallback for separated support directory
     ];
 
-    const stepFiles = new Set<string>();
+    // Phase 2: Discover step definition files
+    const stepPatterns = [
+      `${this.stepsDir}/**/*.steps.ts`,
+      `${this.stepsDir}/**/*.ts`,
+      'tests/e2e/steps/**/*.ts',
+    ];
+
+    const supportFiles = this.findAndSortFiles(supportPatterns);
+    const stepFiles = this.findAndSortFiles(stepPatterns);
+
+    // Remove duplicates: exclude support files from step files
+    const uniqueStepFiles = stepFiles.filter(
+      (f) => !supportFiles.includes(f) && !f.includes('/support/'),
+    );
+
+    // Return with guaranteed order: support files FIRST, then step files
+    return [...supportFiles, ...uniqueStepFiles];
+  }
+
+  /**
+   * Find and sort files matching the given patterns
+   */
+  private findAndSortFiles(patterns: string[]): string[] {
+    const files = new Set<string>();
 
     for (const pattern of patterns) {
       try {
-        const files = globSync(pattern, {
+        const matches = globSync(pattern, {
           absolute: false,
           cwd: process.cwd(),
-        });
-        files.forEach((f) => stepFiles.add(f));
+        }).sort(); // Sort alphabetically for deterministic order
+
+        matches.forEach((f) => files.add(f));
       } catch (error) {
         // Ignore errors for patterns that don't match
       }
     }
 
-    return Array.from(stepFiles);
+    return Array.from(files).sort(); // Ensure consistent order
   }
 }
