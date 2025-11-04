@@ -1,6 +1,6 @@
 {
   "name": "@deepracticex/vitest-cucumber-plugin",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "description": "Vitest plugin for transforming Cucumber feature files to test code",
   "type": "module",
   "main": "./dist/index.js",
