@@ -51,10 +51,60 @@ vitest-cucumber (runtime)
 import { vitestCucumber } from '@deepracticex/vitest-cucumber-plugin';
 
 vitestCucumber({
+  // Feature file patterns
   features: ['features/**/*.feature'],
-  steps: ['tests/steps/**/*.ts'],
+
+  // Step definitions directory
+  steps: 'tests/steps',
+
+  // Support files (hooks, world, custom types) - OPTIONAL
+  // Auto-discovered if not specified
+  support: 'tests/support', // or ['tests/support', 'src/fixtures']
+
+  // Runtime module for imports
   runtimeModule: '@deepracticex/vitest-cucumber', // default
+
+  // Verbose logging
   verbose: false,
+});
+```
+
+#### Support Directory Auto-Discovery
+
+If `support` is **not specified**, the plugin automatically searches for support files in:
+
+1. **Smart detection** - Same parent as steps directory:
+   - `steps='tests/bdd/steps'` → checks `tests/bdd/support`
+   - `steps='tests/e2e/steps'` → checks `tests/e2e/support`
+   - `steps='src/test/steps'` → checks `src/test/support`
+
+2. **Common fallback locations**:
+   - `tests/e2e/support/**/*.ts`
+   - `tests/support/**/*.ts`
+   - `tests/bdd/support/**/*.ts`
+   - `${steps}/support/**/*.ts`
+
+**Support files are always loaded BEFORE step definitions** to ensure hooks and world setup are available.
+
+#### Examples
+
+```typescript
+// Example 1: Auto-discovery (recommended)
+vitestCucumber({
+  steps: 'tests/bdd/steps',
+  // Automatically finds: tests/bdd/support
+});
+
+// Example 2: Explicit single directory
+vitestCucumber({
+  steps: 'tests/steps',
+  support: 'tests/support',
+});
+
+// Example 3: Multiple support directories
+vitestCucumber({
+  steps: 'tests/steps',
+  support: ['tests/support', 'src/test/fixtures'],
 });
 ```
 

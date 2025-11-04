@@ -56,9 +56,14 @@ import { vitestCucumber } from '@deepracticex/vitest-cucumber/plugin';
 export default defineConfig({
   plugins: [
     vitestCucumber({
-      // Optional: customize paths (defaults shown)
+      // Feature files location
       features: ['features/**/*.feature'],
-      steps: 'tests/steps',
+
+      // Step definitions directory
+      steps: 'tests/e2e/steps',
+
+      // Support files (optional - auto-discovered if not specified)
+      // support: 'tests/e2e/support',
     }),
   ],
   test: {
@@ -240,10 +245,41 @@ vitestCucumber({
 
 Files in `support/` directories are **automatically loaded before step definitions**, ensuring hooks and world setup are available when steps execute.
 
-**Loading order:**
+#### How Auto-Discovery Works
 
-1. `tests/e2e/support/**/*.ts` - Hooks, world, custom parameter types
-2. `tests/e2e/steps/**/*.ts` - Step definitions
+If you don't specify `support` in the config, the plugin intelligently searches for support files:
+
+1. **Smart detection** - Checks sibling directory of steps:
+   - `steps='tests/bdd/steps'` → auto-finds `tests/bdd/support`
+   - `steps='tests/e2e/steps'` → auto-finds `tests/e2e/support`
+   - `steps='src/test/steps'` → auto-finds `src/test/support`
+
+2. **Common fallback locations**:
+   - `tests/e2e/support/**/*.ts`
+   - `tests/support/**/*.ts`
+   - `tests/bdd/support/**/*.ts`
+
+**Loading order is always:**
+
+1. Support files (hooks, world, custom types)
+2. Step definitions
+
+#### Explicit Configuration
+
+You can also explicitly specify support directories:
+
+```typescript
+vitestCucumber({
+  steps: 'tests/steps',
+  support: 'tests/support', // Single directory
+});
+
+// Or multiple directories
+vitestCucumber({
+  steps: 'tests/steps',
+  support: ['tests/support', 'src/test/fixtures'], // Multiple
+});
+```
 
 **Example support/hooks.ts:**
 

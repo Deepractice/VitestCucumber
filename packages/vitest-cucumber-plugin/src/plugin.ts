@@ -9,9 +9,14 @@ export function vitestCucumber(
   options: VitestCucumberPluginOptions = {},
 ): Plugin {
   const stepsDir = options.steps || 'tests/steps';
+  const supportDirs = options.support;
   const runtimeModule =
     options.runtimeModule || '@deepracticex/vitest-cucumber';
-  const transformer = new FeatureTransformer(stepsDir, runtimeModule);
+  const transformer = new FeatureTransformer(
+    stepsDir,
+    runtimeModule,
+    supportDirs,
+  );
 
   return {
     name: 'vitest-cucumber',

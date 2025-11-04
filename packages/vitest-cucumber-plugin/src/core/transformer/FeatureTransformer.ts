@@ -9,13 +9,16 @@ export class FeatureTransformer {
   private parser: FeatureParser;
   private generator: CodeGenerator;
   private stepsDir: string;
+  private supportDirs?: string | string[];
 
   constructor(
     stepsDir: string = 'tests/steps',
     runtimeModule: string = '@deepracticex/vitest-cucumber',
+    supportDirs?: string | string[],
   ) {
     this.parser = new FeatureParser();
     this.stepsDir = stepsDir;
+    this.supportDirs = supportDirs;
     this.generator = new CodeGenerator(runtimeModule);
   }
 
@@ -39,11 +42,35 @@ export class FeatureTransformer {
    * Discover step definition files with support files loaded first
    */
   private discoverStepFiles(): string[] {
-    // Phase 1: Discover support files (must load FIRST for hooks and world setup)
-    const supportPatterns = [
-      `${this.stepsDir}/**/support/**/*.ts`,
-      'tests/e2e/support/**/*.ts', // Fallback for separated support directory
-    ];
+    // Phase 1: Build support file patterns
+    const supportPatterns: string[] = [];
+
+    if (this.supportDirs) {
+      // User explicitly configured support directories
+      const dirs = Array.isArray(this.supportDirs)
+        ? this.supportDirs
+        : [this.supportDirs];
+      dirs.forEach((dir) => {
+        supportPatterns.push(`${dir}/**/*.ts`);
+      });
+    } else {
+      // Auto-discovery: smart detection based on steps directory structure
+      // Example: if steps='tests/bdd/steps', check 'tests/bdd/support'
+      const parentDir = this.stepsDir.replace(/\/steps\/?$/, ''); // Remove /steps suffix
+
+      supportPatterns.push(
+        // 1. Sibling support directory (same parent as steps)
+        `${parentDir}/support/**/*.ts`,
+
+        // 2. Support subdirectory under steps
+        `${this.stepsDir}/**/support/**/*.ts`,
+
+        // 3. Common fallback locations
+        'tests/e2e/support/**/*.ts',
+        'tests/support/**/*.ts',
+        'tests/bdd/support/**/*.ts',
+      );
+    }
 
     // Phase 2: Discover step definition files
     const stepPatterns = [
