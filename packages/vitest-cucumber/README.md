@@ -168,26 +168,45 @@ This follows the [official Cucumber specification](https://cucumber.io/docs/cucu
 
 ### Custom World Context
 
+Define a custom World class to share state across steps (standard Cucumber.js pattern):
+
 ```typescript
 import { setWorldConstructor } from '@deepracticex/vitest-cucumber';
 
-interface MyWorld {
+// Define World as a class (recommended - standard Cucumber.js)
+class CustomWorld {
   calculator: Calculator;
   result: number;
+
+  constructor() {
+    this.calculator = new Calculator();
+    this.result = 0;
+  }
+
+  // Add custom helper methods
+  async performCalculation() {
+    // ...
+  }
 }
 
-setWorldConstructor(function (): MyWorld {
-  return {
-    calculator: new Calculator(),
-    result: 0,
-  };
-});
+setWorldConstructor(CustomWorld);
 
-// Use in steps
-Given('...', function (this: MyWorld) {
+// Use in steps with type safety
+Given('...', function (this: CustomWorld) {
   this.calculator.add(5);
 });
 ```
+
+**Alternative: Factory function pattern**
+
+```typescript
+setWorldConstructor(() => ({
+  calculator: new Calculator(),
+  result: 0,
+}));
+```
+
+Both patterns work - use whichever fits your style. Class pattern provides better IDE support and `this` binding.
 
 ## Project Structure
 
@@ -247,23 +266,34 @@ After(function () {
 ```typescript
 import { setWorldConstructor } from '@deepracticex/vitest-cucumber';
 
-setWorldConstructor(function () {
-  return {
-    services: null,
-    userData: {},
-    // Custom methods
-    async login(username: string) {
-      // ...
-    },
-  };
-});
+// Standard Cucumber.js class pattern
+class CustomWorld {
+  services: any;
+  userData: Record<string, any>;
+
+  constructor() {
+    this.services = null;
+    this.userData = {};
+  }
+
+  // Custom helper methods
+  async login(username: string) {
+    // Implementation...
+  }
+
+  async setupTestData() {
+    // Implementation...
+  }
+}
+
+setWorldConstructor(CustomWorld);
 ```
 
 ### Alternative Structures
 
 **Features co-located with source:**
 
-```
+```text
 src/
 ├── auth/
 │   ├── auth.feature
@@ -275,7 +305,7 @@ src/
 
 **Everything in tests:**
 
-```
+```text
 tests/
 ├── features/
 │   └── *.feature

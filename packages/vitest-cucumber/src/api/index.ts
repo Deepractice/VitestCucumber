@@ -3,4 +3,4 @@
  */
 export { Given, When, Then, And, But } from './step-definitions';
 export { Before, After, BeforeAll, AfterAll } from './hooks';
-export { setWorldConstructor } from './world';
+export { setWorldConstructor, type WorldConstructor } from './world';
