@@ -48,7 +48,9 @@ export class CodeGenerator {
     lines.push('  // Track unhandled rejections to prevent test hangs');
     lines.push('  const unhandledRejections = [];');
     lines.push('  const rejectionHandler = (error) => {');
-    lines.push('    console.error("[vitest-cucumber] Unhandled Promise Rejection:", error);');
+    lines.push(
+      '    console.error("[vitest-cucumber] Unhandled Promise Rejection:", error);',
+    );
     lines.push('    unhandledRejections.push(error);');
     lines.push('  };');
 
