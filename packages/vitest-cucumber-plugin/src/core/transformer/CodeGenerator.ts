@@ -112,6 +112,18 @@ export class CodeGenerator {
     );
     lines.push('    __featureHookRegistry__.clear();');
     lines.push('    __featureStepRegistry__.clear();');
+    lines.push('');
+    lines.push(
+      '    // Clear global singletons to allow worker process to exit cleanly',
+    );
+    lines.push('    if (globalThis.__VITEST_CUCUMBER_STEP_REGISTRY__) {');
+    lines.push('      globalThis.__VITEST_CUCUMBER_STEP_REGISTRY__.clear();');
+    lines.push('      delete globalThis.__VITEST_CUCUMBER_STEP_REGISTRY__;');
+    lines.push('    }');
+    lines.push('    if (globalThis.__VITEST_CUCUMBER_HOOK_REGISTRY__) {');
+    lines.push('      globalThis.__VITEST_CUCUMBER_HOOK_REGISTRY__.clear();');
+    lines.push('      delete globalThis.__VITEST_CUCUMBER_HOOK_REGISTRY__;');
+    lines.push('    }');
     lines.push('  });');
 
     // Generate feature-level background
