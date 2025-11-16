@@ -42,7 +42,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Deepractice/EnhancedVitest",
+    "url": "https://github.com/Deepractice/VitestCucumber",
     "directory": "packages/vitest-cucumber-plugin"
   },
   "peerDependencies": {
