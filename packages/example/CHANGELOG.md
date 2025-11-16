@@ -1,5 +1,13 @@
 # @deepracticex/example
 
+## 1.2.8
+
+### Patch Changes
+
+- Updated dependencies [f4ba083]
+  - @deepracticex/vitest-cucumber@1.4.1
+  - @deepracticex/vitest-cucumber-plugin@1.4.1
+
 ## 1.2.7
 
 ### Patch Changes
