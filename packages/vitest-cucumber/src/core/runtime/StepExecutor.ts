@@ -28,7 +28,25 @@ export class StepExecutor {
     }
 
     const args = this.extractArguments(match.matches, match.step, step);
-    await match.step.fn.apply(this.context, args);
+
+    try {
+      // Execute step function with error handling
+      await match.step.fn.apply(this.context, args);
+    } catch (error) {
+      // Wrap error with step context for better debugging
+      const stepInfo = `${step.keyword} ${step.text}`;
+      const errorMessage = error instanceof Error ? error.message : String(error);
+
+      // Log the error with context to help debugging
+      console.error(`[vitest-cucumber] Error in step: ${stepInfo}`);
+      console.error(`[vitest-cucumber] Error details:`, error);
+
+      // Re-throw with enhanced error message
+      throw new Error(
+        `Step failed: ${stepInfo}\n${errorMessage}`,
+        { cause: error }
+      );
+    }
   }
 
   /**

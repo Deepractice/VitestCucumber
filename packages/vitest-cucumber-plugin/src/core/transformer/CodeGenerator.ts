@@ -43,9 +43,21 @@ export class CodeGenerator {
     // Feature describe block
     lines.push(`describe('${this.escapeString(feature.name)}', () => {`);
 
+    // Unhandled rejection handler (defined in describe scope)
+    lines.push('');
+    lines.push('  // Track unhandled rejections to prevent test hangs');
+    lines.push('  const unhandledRejections = [];');
+    lines.push('  const rejectionHandler = (error) => {');
+    lines.push('    console.error("[vitest-cucumber] Unhandled Promise Rejection:", error);');
+    lines.push('    unhandledRejections.push(error);');
+    lines.push('  };');
+
     // Load step files in beforeAll to avoid ES module hoisting issues
     lines.push('');
     lines.push('  beforeAll(async () => {');
+    lines.push('    // Register unhandled rejection handler');
+    lines.push('    process.on("unhandledRejection", rejectionHandler);');
+    lines.push('');
     lines.push('    // Load step definitions with feature context active');
     lines.push('    // Using dynamic import to avoid ES module hoisting');
     lines.push('    __setCurrentFeatureContext__({');
@@ -85,6 +97,9 @@ export class CodeGenerator {
     lines.push('  });');
     lines.push('');
     lines.push('  afterAll(async () => {');
+    lines.push('    // Remove unhandled rejection handler');
+    lines.push('    process.off("unhandledRejection", rejectionHandler);');
+    lines.push('');
     lines.push('    const contextManager = new ContextManager();');
     lines.push(
       "    await __featureHookRegistry__.executeHooks('AfterAll', contextManager.getContext());",
